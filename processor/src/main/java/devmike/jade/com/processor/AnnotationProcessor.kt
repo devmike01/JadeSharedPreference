@@ -1,6 +1,7 @@
 package devmike.jade.com.processor
 
 import com.google.auto.service.AutoService
+import devmike.jade.com.annotations.read.*
 import devmike.jade.com.annotations.sharedprefs.*
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
@@ -34,8 +35,8 @@ class AnnotationProcessor : AbstractProcessor() {
 
         //_____
         return mutableSetOf(SharedPref::class.java.name,
-            SharedFloat::class.java.name, SharedBoolean::class.java.name, SharedInt::class.java.name,
-            SharedLong::class.java.name, SharedSet::class.java.name)
+            ReadFloat::class.java.name, ReadInt::class.java.name, ReadString::class.java.name,
+            ReadLong::class.java.name, ReadStringSet::class.java.name)
     }
 
 

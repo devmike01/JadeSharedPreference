@@ -24,6 +24,9 @@ public object NameStore {
         const val SHARED_EDITOR = "editor"
         const val CONTEXT ="context"
         const val CLASS_VAR ="mClass"
+
+        const val ARGUMENT ="arg0"
+
     }
 
 
@@ -33,6 +36,7 @@ public object NameStore {
         const val ANDROID_SHARED_PREF ="SharedPreferences"
         const val ANY_CLASS = "Any"
         const val ANDROID_SHARED_PREF_EDITOR ="SharedPreferences.Editor"
+        const val STRING_SET ="Set<String>"
     }
 
     object Method {
@@ -40,6 +44,15 @@ public object NameStore {
         const val SHARED_PREF ="generateSharePref"
         const val SHARED_PREF_INSERT_VALUE ="insertValue"
         const val SHARED_PREF_READ_VALUE ="readValue"
+        const val INIT_SHAREDPREF ="plug"
+    }
+
+    object Types{
+        const val STRING ="String"
+        const val FLOAT ="Float"
+        const val INT ="Int"
+        const val LONG ="Long"
+        const val STRINGSET ="StringSet"
     }
 
 }
