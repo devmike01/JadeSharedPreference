@@ -60,4 +60,15 @@ public object JadeSharedPreference {
 
     }
 
+    fun wipeOut(){
+        val wipeFunc = bindingClass?.getMethod("clearSharedPref")
+        wipeFunc?.invoke(this.bindingClassNewInstance)
+    }
+
+    fun remove(key: String){
+        val removeFunc = bindingClass?.getMethod("removeValue", String::class.java)
+        removeFunc?.invoke(this.bindingClassNewInstance, key)
+        return
+    }
+
 }

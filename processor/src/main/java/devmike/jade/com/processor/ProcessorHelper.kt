@@ -151,7 +151,8 @@ internal object ProcessorHelper {
 
             classBuilder.addFunction(buildReadSharedPrefValueBuilder.build())
             classBuilder.addFunction(buildSharedPrefBuilder.build())
-            classBuilder.addType(classBuilder.build())
+            wipeOutSharedPref(classBuilder)
+
 
 
             val file = File(generatedRoot as String).apply { mkdir() }
@@ -251,7 +252,23 @@ internal object ProcessorHelper {
         }
     }
 
-    private fun funSpecBuilder_build(companion: TypeSpec.Builder) {
+    private fun wipeOutSharedPref(classBuilder: TypeSpec.Builder){
+        //Generate code to clear the sharedpreference
+        classBuilder.addFunction(FunSpec.builder(NameStore.Method.CLEAR_SHARE_PREF)
+            .addStatement("%L.clear().commit()", NameStore.Variable.SHARED_EDITOR)
+            .build())
+
+        //Remove an item from SharedPreferences
+        classBuilder.addFunction(FunSpec.builder(NameStore.Method.REMOVE_FROM_SHARE_PREF)
+            .addParameter(NameStore.Variable.SHARED_VALUE_KEY, String::class)
+            .addStatement("%L.remove(%L).commit()",
+                NameStore.Variable.SHARED_EDITOR, NameStore.Variable.SHARED_VALUE_KEY)
+            .build())
+
+        classBuilder
+    }
+
+    private fun funSpecBuilder_build(classBuilder: TypeSpec.Builder) {
         val types = listOf(
             String::class.simpleName, Integer::class.simpleName,
             Long::class.simpleName, Float::class.simpleName,
@@ -282,7 +299,7 @@ internal object ProcessorHelper {
                     NameStore.Variable.ARGUMENT
                 )
                 builder.addCode("${NameStore.Variable.SHARED_EDITOR}.commit() \n")
-                companion.addFunction(builder.build())
+                classBuilder.addFunction(builder.build())
             }
         }
     }

@@ -37,6 +37,7 @@ public object NameStore {
         const val ANY_CLASS = "Any"
         const val ANDROID_SHARED_PREF_EDITOR ="SharedPreferences.Editor"
         const val STRING_SET ="Set<String>"
+        const val STRING ="String"
     }
 
     object Method {
@@ -45,6 +46,9 @@ public object NameStore {
         const val SHARED_PREF_INSERT_VALUE ="insertValue"
         const val SHARED_PREF_READ_VALUE ="readValue"
         const val INIT_SHAREDPREF ="plug"
+        const val CLEAR_SHARE_PREF ="clearSharedPref"
+        const val REMOVE_FROM_SHARE_PREF= "removeValue"
+        const val ADD_OTHER_SET ="customSet";
     }
 
     object Types{
