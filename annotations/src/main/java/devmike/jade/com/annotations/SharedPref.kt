@@ -1,4 +1,4 @@
-package devmike.jade.com.annotations.sharedprefs
+package devmike.jade.com.annotations
 
 import kotlin.reflect.KClass
 

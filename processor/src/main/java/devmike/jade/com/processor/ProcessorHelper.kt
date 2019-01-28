@@ -2,14 +2,12 @@ package devmike.jade.com.processor
 
 import com.squareup.kotlinpoet.*
 import devmike.jade.com.annotations.read.*
-import devmike.jade.com.annotations.sharedprefs.SharedPref
-import devmike.jade.com.annotations.sharedprefs.SharedString
+import devmike.jade.com.annotations.SharedPref
 import java.io.File
 import java.util.HashSet
 import javax.annotation.processing.ProcessingEnvironment
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.Element
-import javax.lang.model.element.Name
 import javax.lang.model.element.TypeElement
 import javax.lang.model.util.ElementFilter
 
@@ -39,10 +37,9 @@ internal object ProcessorHelper {
             //Generic class
             val genericClass = ClassName("", NameStore.Class.ANY_CLASS)
 
-
             //Define the wrapper class
-            val classBuilder = TypeSpec.objectBuilder(NameStore.getGeneratedClassName(typeName))
-                .addProperty(
+            val classBuilder = TypeSpec.classBuilder(NameStore.getGeneratedClassName(typeName))
+                .addModifiers(KModifier.PUBLIC) .addProperty(
                     PropertySpec.builder(
                         NameStore.Variable.CLASS_VAR, genericClass
                             .copy(nullable = false)
@@ -74,30 +71,24 @@ internal object ProcessorHelper {
                         .addModifiers(KModifier.PRIVATE, KModifier.LATEINIT)
                         .build()
                 )
-                .addModifiers(KModifier.PUBLIC)
-
 
             //Method to access CLASS members
             val buildClassAccessBuilder = FunSpec.builder(NameStore.Method.INIT_SHAREDPREF)
                 .addModifiers(KModifier.PUBLIC)
-                .addParameter(NameStore.Variable.CONTEXT, className)
+                .addParameter(NameStore.Variable.CONTEXT, ClassName(NameStore.Package.CONTEXT, NameStore.Class.ANDROID_CONTEXT))
                 .addParameter(NameStore.Variable.CLASS_VAR, genericClass)
                 .addStatement("this.%L = %L", NameStore.Variable.CLASS_VAR, NameStore.Variable.CLASS_VAR)
                 .addStatement(
                     "%N(%N)", NameStore.Method.SHARED_PREF,
                     NameStore.Variable.CONTEXT
-                ).returns(ClassName(packageName, NameStore.getGeneratedClassName(className.simpleName)))
-                .addStatement("return this")
+                )
+                //.returns(ClassName(packageName, NameStore.getGeneratedClassName(className.simpleName)))
+               // .addStatement("return this")
+            classBuilder.addFunction(buildClassAccessBuilder.build())
 
             /**Start the code that generates SharedPreference**/
             //Get Shared pref
             val buildSharedPrefBuilder = FunSpec.builder(NameStore.Method.SHARED_PREF)
-                .returns(
-                    ClassName(
-                        NameStore.Package.ANDROID_SHAREDPREF,
-                        NameStore.Class.ANDROID_SHARED_PREF
-                    )
-                )
                 .addParameter(
                     NameStore.Variable.CONTEXT,
                     ClassName(
@@ -130,7 +121,6 @@ internal object ProcessorHelper {
                         //  NameStore.Variable.SHARED_EDITOR)
                         .addStatement("%N()", NameStore.Method.SHARED_PREF_READ_VALUE)
                         .addComment("Read the saved value from the SharedPreference")
-                        .addStatement("return %N", NameStore.Variable.SHARED_PREF_VALUE)
 
                 }
             }
@@ -159,9 +149,9 @@ internal object ProcessorHelper {
 
             }
 
-            classBuilder.addFunction(buildClassAccessBuilder.build())
             classBuilder.addFunction(buildReadSharedPrefValueBuilder.build())
             classBuilder.addFunction(buildSharedPrefBuilder.build())
+            classBuilder.addType(classBuilder.build())
 
 
             val file = File(generatedRoot as String).apply { mkdir() }
@@ -261,7 +251,7 @@ internal object ProcessorHelper {
         }
     }
 
-    private fun funSpecBuilder_build(classBuilder: TypeSpec.Builder) {
+    private fun funSpecBuilder_build(companion: TypeSpec.Builder) {
         val types = listOf(
             String::class.simpleName, Integer::class.simpleName,
             Long::class.simpleName, Float::class.simpleName,
@@ -292,7 +282,7 @@ internal object ProcessorHelper {
                     NameStore.Variable.ARGUMENT
                 )
                 builder.addCode("${NameStore.Variable.SHARED_EDITOR}.commit() \n")
-                classBuilder.addFunction(builder.build())
+                companion.addFunction(builder.build())
             }
         }
     }
