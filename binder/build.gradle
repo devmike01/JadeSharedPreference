@@ -9,7 +9,7 @@ apply plugin: 'kotlin-kapt'
 
 apply plugin: 'com.github.dcendents.android-maven'
 
-//group='com.github.devmike01.jadesharedpreference'
+group='com.github.devmike01.jadesharedpreference'
 
 //groupId: 'com.github.devmike01.Jadesharedpreference'
 //artifact id: 'jadesharedpreference-annotations'
@@ -23,7 +23,6 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'proguard-rules.pro'
     }
 
