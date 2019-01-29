@@ -8,7 +8,7 @@ apply plugin: 'kotlin-kapt'
 
 apply plugin: 'com.github.dcendents.android-maven'
 
-group='com.github.devmike01.Jadesharedpreference.jadesharedpreference-annotations'
+group='com.github.devmike01.Jadesharedpreference'
 
 
 android {

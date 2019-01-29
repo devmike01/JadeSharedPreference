@@ -26,7 +26,7 @@ android {
 
 dependencies {
 
-    //implementation 'com.github.devmike01.JadeSharedPreference:jadesharedpreference-annotations:0.2.2'
+    //implementation 'com.github.devmike01.JadeSharedPreference:jadesharedpreference-annotations:0.2.5'
     kapt project(':jadesharedpreference-compiler')
     implementation project(':jadesharedpreference-annotations')
 

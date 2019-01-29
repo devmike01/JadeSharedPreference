@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         jsp =JadeSharedPreference.plug(this, this)
 
-        jsp.insert("hk", 1.6)
+        jsp.insert("hk", 1.6f)
        //hel.text = myVaue.toString()
 
     }
