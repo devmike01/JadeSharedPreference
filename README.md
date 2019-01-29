@@ -33,7 +33,7 @@ class InecBox(context: Context) {
 ##### Step 1: Add it in your root build.gradle at the end of repositories:
 ```groovy
 allprojects {
-		repositories {
+	repositories {
 			...
 			maven { url 'https://jitpack.io' }
 		}
@@ -42,9 +42,9 @@ allprojects {
 ##### Step 2: Add the dependency
 ```groovy
 	dependencies {
-	implementation 'com.github.devmike01.JadeSharedPreference:binder:0.2.15'
-	kapt 'com.github.devmike01.JadeSharedPreference:compiler:0.2.15'
-}
+		implementation 'com.github.devmike01.JadeSharedPreference:binder:0.2.15'
+		kapt 'com.github.devmike01.JadeSharedPreference:compiler:0.2.15'
+	}	
 ```
 ##### Note: Add `apply plugin: 'kotlin-kapt'` - if you don't already have it, to your app `build.gradle` to allow the the processor generates the necessary codes.
 
