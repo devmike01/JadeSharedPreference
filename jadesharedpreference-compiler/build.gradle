@@ -3,7 +3,9 @@ apply plugin: 'kotlin-kapt'
 
 apply plugin: 'com.github.dcendents.android-maven'
 
-group='com.github.devmike01.Jadesharedpreference'
+//group='com.github.devmike01.Jadesharedpreference'
+//groupId: 'com.github.devmike01.Jadesharedpreference'
+//artifact id: 'jadesharedpreference-compiler'
 
 kapt{
     generateStubs =true
