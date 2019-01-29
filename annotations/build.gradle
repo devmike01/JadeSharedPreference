@@ -1,5 +1,7 @@
 apply plugin: 'kotlin'
 
+group='com.github.devmike01.jadesharedpreference-annotations'
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
