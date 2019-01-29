@@ -10,9 +10,8 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/annotations" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/jadesharedpreference-annotations" />
-            <option value="$PROJECT_DIR$/jadesharedpreference-compiler" />
-            <option value="$PROJECT_DIR$/processor" />
+            <option value="$PROJECT_DIR$/binder" />
+            <option value="$PROJECT_DIR$/compiler" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

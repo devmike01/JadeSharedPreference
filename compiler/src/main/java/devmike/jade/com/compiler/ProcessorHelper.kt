@@ -1,8 +1,9 @@
-package devmike.jade.com.processor
+package devmike.jade.com.compiler
 
 import com.squareup.kotlinpoet.*
-import devmike.jade.com.annotations.read.*
 import devmike.jade.com.annotations.SharedPref
+import devmike.jade.com.annotations.read.*
+import devmike.jade.com.processor.NameStore
 import java.io.File
 import java.util.HashSet
 import javax.annotation.processing.ProcessingEnvironment
@@ -136,7 +137,8 @@ internal object ProcessorHelper {
                 .addModifiers(KModifier.PRIVATE)
             //Generate the statement that saved value into the SharedPreference
             for (annotatedParam in ElementFilter.fieldsIn(typeElement.enclosedElements)) {
-                val annotatedList = listOf(ReadString::class.simpleName,
+                val annotatedList = listOf(
+                    ReadString::class.simpleName,
                     ReadLong::class.simpleName, ReadStringSet::class.simpleName,
                     ReadFloat::class.simpleName,
                     ReadInt::class.simpleName)
@@ -165,8 +167,8 @@ internal object ProcessorHelper {
 
     private fun pickAnnotation(buildReadSharedPrefValueBuilder:
                    FunSpec.Builder,
-                   annotatedList: List<String?>, annotatedParam: Element,
-                   className: ClassName) {
+                               annotatedList: List<String?>, annotatedParam: Element,
+                               className: ClassName) {
 
         /* "(%L as %L).%L = %L.get%L(%S, %S)",
         NameStore.Variable.CLASS_VAR,

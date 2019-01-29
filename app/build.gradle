@@ -27,8 +27,8 @@ android {
 dependencies {
 
     //implementation 'com.github.devmike01.JadeSharedPreference:jadesharedpreference-annotations:0.2.5'
-    kapt project(':jadesharedpreference-compiler')
-    implementation project(':jadesharedpreference-annotations')
+    kapt project(':compiler')
+    implementation project(':binder')
 
     //implementation project(":annotations")
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"

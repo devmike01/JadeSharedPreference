@@ -1,4 +1,4 @@
-package devmike.jade.com.processor
+package devmike.jade.com.compiler
 
 import com.google.auto.service.AutoService
 import devmike.jade.com.annotations.SharedPref

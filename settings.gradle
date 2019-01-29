@@ -1,1 +1,1 @@
-include ':app', ':annotations', ':jadesharedpreference-compiler', ':processor', ':jadesharedpreference-annotations'
+include ':app', ':annotations', ':binder', ':compiler'
