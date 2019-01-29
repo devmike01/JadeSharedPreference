@@ -1,11 +1,11 @@
 apply plugin: 'kotlin'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
+
 
 apply plugin: 'com.github.dcendents.android-maven'
 
-//group='com.github.devmike01.Jadesharedpreference'
-//groupId: 'com.github.devmike01.Jadesharedpreference'
-//artifact id: 'jadesharedpreference-compiler'
+group='com.github.devmike01.Jadesharedpreference'
 
 kapt{
     generateStubs =true
