@@ -26,9 +26,10 @@ android {
 
 dependencies {
 
-   // implementation 'com.github.devmike01.JadeSharedPreference:jadesharedpreference-annotations:0.2.1'
+    //implementation 'com.github.devmike01.JadeSharedPreference:jadesharedpreference-annotations:0.2.2'
     kapt project(':jadesharedpreference-compiler')
     implementation project(':jadesharedpreference-annotations')
+
     //implementation project(":annotations")
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '2.10.0'
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
