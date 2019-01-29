@@ -5,11 +5,6 @@ import android.content.Context
 import android.util.Log
 import java.lang.Error
 import java.lang.IllegalArgumentException
-import java.lang.NullPointerException
-import java.lang.reflect.Array
-import java.lang.reflect.InvocationTargetException
-import kotlin.concurrent.thread
-import kotlin.reflect.KClass
 
 public object JadeSharedPreference {
 

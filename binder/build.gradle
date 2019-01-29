@@ -11,8 +11,6 @@ apply plugin: 'com.github.dcendents.android-maven'
 
 group='com.github.devmike01.jadesharedpreference'
 
-//groupId: 'com.github.devmike01.Jadesharedpreference'
-//artifact id: 'jadesharedpreference-annotations'
 
 
 android {
@@ -23,7 +21,6 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-        consumerProguardFiles 'proguard-rules.pro'
     }
 
     buildTypes {
@@ -39,7 +36,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    api project(':annotations')
+    implementation project(':annotations')
 
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
