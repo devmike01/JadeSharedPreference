@@ -25,8 +25,8 @@ android {
 }
 
 dependencies {
-    kapt project(':processor')
-    implementation project(":binder")
+    kapt project(':jadesharedpreference-compiler')
+    implementation project(':jadesharedpreference-annotations')
     //implementation project(":annotations")
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '2.10.0'
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
