@@ -237,7 +237,7 @@ internal object ProcessorHelper {
                 val valueSharedPref = annotatedParam.getAnnotation(ReadFloat::class.java)
                 if (valueSharedPref != null)
                     buildReadSharedPrefValueBuilder.addStatement(
-                        "(%L as %L).%L = %L.get%L(%S, %L)",
+                        "(%L as %L).%L = %L.get%L(%S, %Lf)",
                         NameStore.Variable.CLASS_VAR,
                         className,
                         annotatedParam.simpleName,

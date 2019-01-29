@@ -68,7 +68,6 @@ public object JadeSharedPreference {
     fun remove(key: String){
         val removeFunc = bindingClass?.getMethod("removeValue", String::class.java)
         removeFunc?.invoke(this.bindingClassNewInstance, key)
-        return
     }
 
 }

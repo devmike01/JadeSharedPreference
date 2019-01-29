@@ -28,6 +28,10 @@ dependencies {
     kapt project(':processor')
     implementation project(":binder")
     //implementation project(":annotations")
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '2.10.0'
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    testImplementation "org.robolectric:robolectric:4.2-SNAPSHOT"
+
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
