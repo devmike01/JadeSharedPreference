@@ -1,29 +1,30 @@
 # JadeSharedPreference
-A lite wight android library wrapper for SharedPreferences which uses annotation processing to generate boilerplate code for you.
+A lite weight SharedPreference library which uses annotation processing to generate boilerplate code for you.
 
 * Eliminate the whole `SharedPreference` code
-* Write less code to configure SharedPreference
-* Save multiple values to SharedPrefence at onces
-* Read SharedPreference using just annotations `@Read...`)
+* Write less code to configure JadeSharedPreference
+* Save multiple values to JadeSharedPrefence at onces
+* Read from JadeSharedPreference using just annotations `@Read...`)
 
 ```kotin
-class MainActivity : AppCompatActivity() {
+class InecBox(context: Context) {
+	
+    //Read item from JadeSharedPreference	
+    @ReadString("ballot")
+    var ballotPaper: String? = null
 
-    @ReadFloat("hk")
-    var myVaue: Float =0.0f
-
-    private lateinit var jsp :JadeSharedPreference
+    private var jsp :JadeSharedPreference jsp =JadeSharedPreference.plug(this, context)
 
     @SharedPref("key")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        jsp =JadeSharedPreference.plug(this, this)
-
-        jsp.insert("hk", 1.6)
-        hel.text = myVaue.toString()
-
+    fun inecBox() {
+    	//Insert item to JadeSharedPreference
+        jsp.insert("ballot", "Ballot Paper")
     }
+    
+    fun readBallot(){
+    	Log.d(InecBox::class.simpleName, ballotPaper)
+    }
+    
 }
 
 ```
@@ -32,7 +33,7 @@ class MainActivity : AppCompatActivity() {
 ##### Step 1: Add it in your root build.gradle at the end of repositories:
 ```groovy
 allprojects {
-		repositories {
+	repositories {
 			...
 			maven { url 'https://jitpack.io' }
 		}
@@ -41,15 +42,17 @@ allprojects {
 ##### Step 2: Add the dependency
 ```groovy
 	dependencies {
-	}
+		implementation 'com.github.devmike01.JadeSharedPreference:binder:0.2.15'
+		kapt 'com.github.devmike01.JadeSharedPreference:compiler:0.2.15'
+	}	
 ```
-
+##### Note: Add `apply plugin: 'kotlin-kapt'` - if you don't already have it, to your app `build.gradle` to allow the the processor generates the necessary codes.
 
 
 License
 -------
 
-    Copyright 2013 Jake Wharton
+    Copyright 2018 Oladipupo Gbenga
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
