@@ -16,6 +16,8 @@ public object NameStore {
         const val ANDROID_SHAREDPREF="android.content"
         const val GENERATED_CLASS ="JadeSharedPreference"
         const val CLASS_ ="kotlin"
+
+
     }
 
     object Variable {
@@ -24,7 +26,7 @@ public object NameStore {
         const val SHARED_EDITOR = "editor"
         const val CONTEXT ="context"
         const val CLASS_VAR ="mClass"
-
+        const val SHAREDPREF_LISTENER ="sharedPrefListener"
         const val ARGUMENT ="arg0"
 
     }
@@ -41,6 +43,8 @@ public object NameStore {
     }
 
     object Method {
+
+        const val UNREGISTER_SHARED_PREF_LISTENER ="unregisterOnSharedPreferenceChangeListener"
         const val CONTEXT ="context"
         const val SHARED_PREF ="generateSharePref"
         const val SHARED_PREF_INSERT_VALUE ="insertValue"
@@ -48,7 +52,10 @@ public object NameStore {
         const val INIT_SHAREDPREF ="plug"
         const val CLEAR_SHARE_PREF ="clearSharedPref"
         const val REMOVE_FROM_SHARE_PREF= "removeValue"
-        const val ADD_OTHER_SET ="customSet";
+        const val ADD_OTHER_SET ="customSet"
+        const val UNPLUG ="unplug"
+        const val UNREGISTER_SHARED_PREF ="unregisterSharedPref"
+        const val SHAREDPREFERENCE_CHANGED="onSharedPreferenceChanged"
     }
 
     object Types{
@@ -57,6 +64,10 @@ public object NameStore {
         const val INT ="Int"
         const val LONG ="Long"
         const val STRINGSET ="StringSet"
+    }
+
+    object Interface{
+        const val ONSHAREDPREF_INTERFACE ="OnSharedPreferenceChangeListener"
     }
 
 }

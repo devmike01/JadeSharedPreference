@@ -6,9 +6,9 @@ import devmike.jade.com.annotations.read.ReadInt
 import devmike.jade.com.annotations.read.ReadString
 import devmike.jade.com.binder.JadeSharedPreference
 
-open class TestClass{
+ class TestClass(context: Context){
 
-    lateinit var jsp: JadeSharedPreference
+     var jsp: JadeSharedPreference = JadeSharedPreference.plug(this, context)
 
     val TEST_KEY: String ="test_key"
 
@@ -18,7 +18,6 @@ open class TestClass{
 
     @SharedPref("test0")
     fun init(context: Context){
-        jsp= JadeSharedPreference.plug(TestClass::class.java.newInstance(), context)
     }
 
 
@@ -26,7 +25,7 @@ open class TestClass{
         jsp.insert("test", 200)
     }
 
-    public fun readTest(): Int{
+    public fun readTest(): Int{2
         return testInt
     }
 

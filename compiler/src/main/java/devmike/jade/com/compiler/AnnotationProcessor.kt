@@ -18,6 +18,7 @@ class AnnotationProcessor : AbstractProcessor() {
     private lateinit var messager: Messager
     private lateinit var elementUtil: Elements
 
+
     override fun init (processingEnv: ProcessingEnvironment){
         super.init(processingEnv)
         this.filer = processingEnv.filer
@@ -36,8 +37,10 @@ class AnnotationProcessor : AbstractProcessor() {
         //_____
         return mutableSetOf(
             SharedPref::class.java.name,
-            ReadFloat::class.java.name, ReadInt::class.java.name, ReadString::class.java.name,
-            ReadLong::class.java.name, ReadStringSet::class.java.name)
+            ReadFloat::class.java.name, ReadInt::class.java.name,
+            ReadString::class.java.name,
+            ReadLong::class.java.name,
+            ReadStringSet::class.java.name)
     }
 
 
