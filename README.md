@@ -1,5 +1,5 @@
 # JadeSharedPreference
-A lite weight android library wrapper for SharedPreferences which uses annotation processing to generate boilerplate code for you.
+A lite weight SharedPreference library which uses annotation processing to generate boilerplate code for you.
 
 * Eliminate the whole `SharedPreference` code
 * Write less code to configure JadeSharedPreference
@@ -52,7 +52,7 @@ allprojects {
 License
 -------
 
-    Copyright 2013 Jake Wharton
+    Copyright 2018 Oladipupo Gbenga
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
