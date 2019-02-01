@@ -5,6 +5,7 @@ A lite weight SharedPreference library which uses annotation processing to gener
 * Write less code to configure JadeSharedPreference
 * Save multiple values to JadeSharedPrefence at onces
 * Read from JadeSharedPreference using just annotations `@Read...`)
+* Listen to value changes in realtime
 
 ```kotin
 class InecBox(context: Context) {
