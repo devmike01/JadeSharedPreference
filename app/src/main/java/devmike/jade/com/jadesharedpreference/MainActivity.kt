@@ -39,10 +39,10 @@ class MainActivity @SharedPref("key") constructor(): AppCompatActivity() {
     public fun btnTestOne(v: View){
         val ed: String = ed_1.text.toString()
         when (v) {
-            save_btn1 -> jsp.insert("string", ed)git
+            save_btn1 -> jsp.insert("string", ed)
             save_btn2 -> jsp.insert("integer_anything", ed_2.text.toString().toInt())
             save_btn3 -> jsp.insert("float_key", ed_3.text.toString().toFloat())
-            save_btn5 -> jsp.insert("stringset__", mutableSetOf(ed_5.text.toString().split(",")))
+            save_btn5 -> jsp.insert("stringset__", setOf(ed_5.text.toString()))
             save_btn4 -> jsp.insert("long_", ed_4.text.toString().toLong())
         }
     }

@@ -30,7 +30,8 @@ public object JadeSharedPreference {
         return this
     }
 
-    fun insert(key: String, value: Any){
+    fun <T : Any> insert(key: String, value: T){
+        Log.d("TAGGGG", value::class.simpleName)
         if (value is String) {
             val insertStringFunc = bindingClass?.getMethod("insertValue", String::class.java,
                 String::class.java)
@@ -38,11 +39,11 @@ public object JadeSharedPreference {
         }else if (value is Int) {
             val insertIntFunc = bindingClass?.getMethod("insertValue", Int::class.java, String::class.java)
             insertIntFunc?.invoke(this.bindingClassNewInstance, value, key)
-        }else if(value is MutableSet<*>) {
+        }else if(value is LinkedHashSet<*>) {
             if (!value.isEmpty()){
                 if (value.elementAt(0) is String){
                     val insertStringSetFunc = bindingClass?.getMethod("insertValue", Set::class.java, String::class.java)
-                    insertStringSetFunc?.invoke(this.bindingClassNewInstance)
+                    insertStringSetFunc?.invoke(this.bindingClassNewInstance, value, key)
                     return
                 }
 
