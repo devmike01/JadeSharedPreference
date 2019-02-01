@@ -17,23 +17,28 @@ import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity @SharedPref("key") constructor(): AppCompatActivity() {
+class MainActivity @SharedPref("sharedSetKey") constructor(): AppCompatActivity() {
 
 
     private lateinit var jsp :JadeSharedPreference
 
+    //Read string from JadeSharedPreference
     @ReadString("string")
     public lateinit var mString: String
 
+    //Read Integer from JadeSharedPreference
     @ReadInt("integer_anything")
     public var mInteger: Int =0
 
+    //Read Long from JadeSharedPreference
     @ReadLong("long_")
     public var mLong: Long =0
 
+    //Read Float from JadeSharedPreference
     @ReadFloat("float_key")
     public var mFloat: Float =0f
 
+    //Read StringSet from JadeSharedPreference
     @ReadStringSet("stringset__")
     public var mStringSet: MutableSet<String> = mutableSetOf()
 
@@ -58,6 +63,9 @@ class MainActivity @SharedPref("key") constructor(): AppCompatActivity() {
     }
 
     public fun btnTestOne(v: View){
+        /**
+         * Click to write to JadeSharedPreference
+         */
         val ed: String = ed_1.text.toString()
         when (v) {
             save_btn1 -> jsp.insert("string", ed)
@@ -69,26 +77,31 @@ class MainActivity @SharedPref("key") constructor(): AppCompatActivity() {
     }
 
 
+    //Listen to Float changes in realtime
     @ReadFloat("float_key")
-    public fun listenToFloatReadChanges(f: Float){
+    fun listenToFloatReadChanges(f: Float){
         read_3.text = f.toString()
     }
 
+    //Listen to String changes in realtime
     @ReadString("string")
-    public fun readStringChanges(s: String){
+    fun readStringChanges(s: String){
         read_1.text = s
     }
 
+    //Listen to Integer changes in realtime
     @ReadInt("integer_anything")
-    public fun listenToIntegerChanges(i: Int){
+    fun listenToIntegerChanges(i: Int){
         read_2.text =i.toString()
     }
 
+    //Listen to Long changes in realtime
     @ReadLong("long_")
     fun longChangeListener(l: Long){
         read_4.text = l.toString()
     }
 
+    //Listen to StringSet changes in realtime
     @ReadStringSet("stringset__")
     fun stringSetChanges(set: MutableSet<String>){
         read_5.text = set.toString()
