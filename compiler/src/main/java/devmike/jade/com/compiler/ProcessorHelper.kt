@@ -348,7 +348,7 @@ internal object ProcessorHelper {
                         className,
                         annotatedParam.simpleName,
                         NameStore.Variable.SHARED_PREF_VALUE,
-                        Long::class.java.simpleName.toString(),
+                        Long::class.simpleName.toString(),
                         valueSharedPref.key,
                         valueSharedPref.defaultValue
                     )

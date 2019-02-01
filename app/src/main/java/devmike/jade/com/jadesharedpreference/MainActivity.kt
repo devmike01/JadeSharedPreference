@@ -22,11 +22,32 @@ class MainActivity @SharedPref("key") constructor(): AppCompatActivity() {
 
     private lateinit var jsp :JadeSharedPreference
 
+    @ReadString("string")
+    public lateinit var mString: String
+
+    @ReadInt("integer_anything")
+    public var mInteger: Int =0
+
+    @ReadLong("long_")
+    public var mLong: Long =0
+
+    @ReadFloat("float_key")
+    public var mFloat: Float =0f
+
+    @ReadStringSet("stringset__")
+    public var mStringSet: MutableSet<String> = mutableSetOf()
+
     //@SharedPref("key")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         jsp =JadeSharedPreference.plug(this, this)
+
+        read_1.text = mString
+        read_2.text = mInteger.toString()
+        read_3.text = mFloat.toString()
+        read_4.text = mLong.toString()
+        read_5.text = mStringSet.toString()
 
         save_btn1.setOnClickListener(this::btnTestOne)
         save_btn2.setOnClickListener(this::btnTestOne)
@@ -42,7 +63,7 @@ class MainActivity @SharedPref("key") constructor(): AppCompatActivity() {
             save_btn1 -> jsp.insert("string", ed)
             save_btn2 -> jsp.insert("integer_anything", ed_2.text.toString().toInt())
             save_btn3 -> jsp.insert("float_key", ed_3.text.toString().toFloat())
-            save_btn5 -> jsp.insert("stringset__", setOf(ed_5.text.toString()))
+            save_btn5 -> jsp.insert("stringset__", mutableSetOf(ed_5.text.toString()))
             save_btn4 -> jsp.insert("long_", ed_4.text.toString().toLong())
         }
     }
