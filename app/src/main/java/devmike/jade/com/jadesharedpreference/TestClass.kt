@@ -6,7 +6,8 @@ import devmike.jade.com.annotations.read.ReadInt
 import devmike.jade.com.annotations.read.ReadString
 import devmike.jade.com.binder.JadeSharedPreference
 
- class TestClass(context: Context){
+ class TestClass
+@SharedPref("test0") constructor(context: Context){
 
      var jsp: JadeSharedPreference = JadeSharedPreference.plug(this, context)
 
@@ -16,7 +17,6 @@ import devmike.jade.com.binder.JadeSharedPreference
     var testInt: Int =9
 
 
-    @SharedPref("test0")
     fun init(context: Context){
     }
 

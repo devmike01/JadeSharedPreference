@@ -5,6 +5,8 @@ import android.content.Context
 import android.util.Log
 import java.lang.Error
 import java.lang.IllegalArgumentException
+import java.lang.NullPointerException
+import java.lang.reflect.InvocationTargetException
 
 public object JadeSharedPreference {
 
@@ -18,20 +20,25 @@ public object JadeSharedPreference {
         val method = bindingClass?.getMethod("plug", Context::class.java, Any::class.java)
 
         this.bindingClassNewInstance =bindingClass?.newInstance()
+        try {
+            method?.invoke(bindingClassNewInstance, context, targetClas)
 
-        method?.invoke(bindingClassNewInstance, context, targetClas)
+        }catch (uip: UninitializedPropertyAccessException){
+            throw NullPointerException("@SharedPref() is missing in your constructor")
+        }
 
         return this
     }
 
     fun insert(key: String, value: Any){
         if (value is String) {
-            val insertStringFunc = bindingClass?.getMethod("insertValue", String::class.java, String::class.java)
+            val insertStringFunc = bindingClass?.getMethod("insertValue", String::class.java,
+                String::class.java)
             insertStringFunc?.invoke(this.bindingClassNewInstance, value, key)
         }else if (value is Int) {
             val insertIntFunc = bindingClass?.getMethod("insertValue", Int::class.java, String::class.java)
             insertIntFunc?.invoke(this.bindingClassNewInstance, value, key)
-        }else if(value is Set<*>) {
+        }else if(value is MutableSet<*>) {
             if (!value.isEmpty()){
                 if (value.elementAt(0) is String){
                     val insertStringSetFunc = bindingClass?.getMethod("insertValue", Set::class.java, String::class.java)
@@ -39,12 +46,12 @@ public object JadeSharedPreference {
                     return
                 }
 
-                throw  IllegalArgumentException("JadeSharedPreference on support string set!")
+                throw  IllegalArgumentException("JadeSharedPreference only support string set!")
             }
 
          }else if (value is Float) {
             val insertFloatFunc = bindingClass?.getMethod("insertValue", Float::class.java, String::class.java)
-            insertFloatFunc?.invoke(this.bindingClassNewInstance, value, key)
+            insertFloatFunc?.invoke(this.bindingClassNewInstance, value.toFloat(), key)
         }else if (value is Long) {
             val insertLongFunc = bindingClass?.getMethod("insertValue", Long::class.java, String::class.java)
             insertLongFunc?.invoke(this.bindingClassNewInstance, value, key)

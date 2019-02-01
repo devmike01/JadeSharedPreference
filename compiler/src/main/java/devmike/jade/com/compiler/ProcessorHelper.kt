@@ -17,6 +17,7 @@ internal object ProcessorHelper {
 
     const val KAPT_KOTLIN_GENERATED = "kapt.kotlin.generated"
     private lateinit var buildClassAccessBuilder: FunSpec.Builder
+    private lateinit var sharedPrefListenerBuilder: FunSpec.Builder
 
     public fun process(
         processingEnv: ProcessingEnvironment,
@@ -39,6 +40,19 @@ internal object ProcessorHelper {
 
             //Generic class
             val genericClass = ClassName("", NameStore.Class.ANY_CLASS)
+
+            //Create SharedPreference change listener function
+            sharedPrefListenerBuilder =FunSpec.builder(NameStore.Method.SHAREDPREFERENCE_CHANGED)
+                .addModifiers(KModifier.OVERRIDE)
+                .addParameter(
+                    NameStore.Variable.SHARED_PREF_VALUE,
+                    ClassName(
+                        NameStore.Package.ANDROID_SHAREDPREF,
+                        NameStore.Class.ANDROID_SHARED_PREF
+                    )
+                )
+                .addParameter(NameStore.Variable.SHARED_VALUE_KEY, String::class)
+
 
             //Define the wrapper class
             val classBuilder = TypeSpec.classBuilder(NameStore.getGeneratedClassName(typeName))
@@ -73,7 +87,15 @@ internal object ProcessorHelper {
                         .mutable()
                         .addModifiers(KModifier.PRIVATE, KModifier.LATEINIT)
                         .build()
-                )
+                ) .addSuperinterface(
+                    ClassName(
+                        NameStore.Package.ANDROID_SHAREDPREF,
+                        NameStore.Class.ANDROID_SHARED_PREF.plus(".${NameStore.Interface.ONSHAREDPREF_INTERFACE}")
+                    )
+                ).addFunction(FunSpec.builder(NameStore.Method.UNREGISTER_SHARED_PREF)
+                    .addComment("Call this function to unregister SharedPreference callback")
+                    .addStatement("%N.%N(this)",NameStore.Variable.SHARED_PREF_VALUE,
+                        NameStore.Method.UNREGISTER_SHARED_PREF_LISTENER).build())
 
             //Method to access CLASS members
             buildClassAccessBuilder = FunSpec.builder(NameStore.Method.INIT_SHAREDPREF)
@@ -84,7 +106,10 @@ internal object ProcessorHelper {
                 .addStatement(
                     "%N(%N)", NameStore.Method.SHARED_PREF,
                     NameStore.Variable.CONTEXT
-                )
+                ).addStatement("%L.registerOnSharedPreferenceChangeListener(this)",
+                    NameStore.Variable.SHARED_PREF_VALUE)
+
+
                 //.returns(ClassName(packageName, NameStore.getGeneratedClassName(className.simpleName)))
                // .addStatement("return this")
 
@@ -99,7 +124,7 @@ internal object ProcessorHelper {
                     )
                 )
                 .addModifiers(KModifier.PRIVATE)
-            for (method in ElementFilter.methodsIn(typeElement.enclosedElements)) {
+            for (method in ElementFilter.constructorsIn(typeElement.enclosedElements)) {
                 if (method != null) {
                     //Create the method where we initialize the SharedPrefence
                     val baseSharedPrefA = method.getAnnotation(SharedPref::class.java)
@@ -174,31 +199,39 @@ internal object ProcessorHelper {
 
                     if (readFloatAn != null){
                         annotationBuilder(className,classBuilder,
-                            annotatedMethod, Float::class.simpleName, readFloatAn.defaultValue.toString().plus("f"),
+                            annotatedMethod, Float::class.simpleName, readFloatAn.defaultValue,
                             readFloatAn.key)
                     }
 
                     if(readStringAn != null){
-                        annotationBuilder(className,classBuilder, annotatedMethod,
-                            String::class.qualifiedName, readStringAn.defaultValue,
-                            readLongAn.key)
+                        annotationBuilder(className,classBuilder,
+                            annotatedMethod,
+                            String::class.java.simpleName,
+                            readStringAn.defaultValue,
+                            readStringAn.key)
                     }
 
                     if (readStringSetAn != null){
                         annotationBuilder(className,classBuilder, annotatedMethod,
-                            NameStore.Types.STRINGSET, readStringSetAn.defaultValue, readLongAn.key)
+                            NameStore.Types.STRINGSET,
+                            "mutableSetOf(\"\")",
+                            readStringSetAn.key)
 
                     }
 
                     if (readIntAn != null){
-                        annotationBuilder(className,classBuilder, annotatedMethod,
-                            Int::class.qualifiedName, readIntAn.defaultValue, readLongAn.key)
+                        annotationBuilder(className,
+                            classBuilder,
+                            annotatedMethod,
+                            Int::class.simpleName,
+                            readIntAn.defaultValue,
+                            readIntAn.key)
                     }
 
                     if (readLongAn != null){
 
                         annotationBuilder(className,classBuilder, annotatedMethod,
-                            Long::class.qualifiedName, readLongAn.defaultValue, readLongAn.key)
+                            LONG.simpleName, readLongAn.defaultValue, readLongAn.key)
                     }
                 }
             }
@@ -206,6 +239,7 @@ internal object ProcessorHelper {
             classBuilder.addFunction(buildClassAccessBuilder.build())
             classBuilder.addFunction(buildReadSharedPrefValueBuilder.build())
             classBuilder.addFunction(buildSharedPrefBuilder.build())
+            classBuilder.addFunction(sharedPrefListenerBuilder.build())
             wipeOutSharedPref(classBuilder)
 
 
@@ -219,7 +253,7 @@ internal object ProcessorHelper {
 
     private fun annotationBuilder(className : ClassName,classBuilder: TypeSpec.Builder,
                                   annotatedMethod: Element, annotatedVarType: String?,
-                                  defaultValue: Any, key: String){
+                                      defaultValue: Any, key: String){
         if (annotatedVarType != null) {
             listenerBuilder(className, classBuilder, annotatedMethod, annotatedVarType,
                 defaultValue, key)
@@ -230,44 +264,30 @@ internal object ProcessorHelper {
                                 annotatedMethod: Element,
                                 annotatedVarType: String, defaultValue: Any, key: String){
 
-        //Only register the SharedPreference listener when we find an annotated method/function
-        buildClassAccessBuilder.addStatement("%L.registerOnSharedPreferenceChangeListener(this)",
-            NameStore.Variable.SHARED_PREF_VALUE)
+        sharedPrefListenerBuilder
+            .addComment("Get $annotatedVarType value from SharedPreference")
+            .addStatement("if(%N.equals(%S)){(%L as %L).%L(%L.get%L(%S, ${placeHolder(annotatedVarType)}))}",
+            NameStore.Variable.SHARED_VALUE_KEY,
+            key,
+            NameStore.Variable.CLASS_VAR,
+            className,
+            annotatedMethod.simpleName.toString(),
+            NameStore.Variable.SHARED_PREF_VALUE,
+            annotatedVarType,
+            key,
+            defaultValue)
 
-        //Implements the SharedPreference change listener
-        classBuilder  .addSuperinterface(
-            ClassName(
-                NameStore.Package.ANDROID_SHAREDPREF,
-                NameStore.Class.ANDROID_SHARED_PREF.plus(".${NameStore.Interface.ONSHAREDPREF_INTERFACE}")
-            )
-        )
-            .addFunction(
-                FunSpec.builder(NameStore.Method.SHAREDPREFERENCE_CHANGED)
-                    .addModifiers(KModifier.OVERRIDE)
-                    .addParameter(
-                        NameStore.Variable.SHARED_PREF_VALUE,
-                        ClassName(
-                            NameStore.Package.ANDROID_SHAREDPREF,
-                            NameStore.Class.ANDROID_SHARED_PREF
-                        )
-                    )
-                    .addParameter(NameStore.Variable.SHARED_VALUE_KEY, String::class)
-                    .addStatement("(%L as %L).%L(%N, %L.get%L(%S, %L))",
-                        NameStore.Variable.CLASS_VAR,
-                        className,
-                        annotatedMethod.simpleName.toString(),
-                        NameStore.Variable.SHARED_PREF_VALUE,
-                        NameStore.Variable.SHARED_PREF_VALUE,
-                        annotatedVarType,
-                        key,
-                        defaultValue
-                    )
-                    .build()
-            ).addFunction(FunSpec.builder(NameStore.Method.UNREGISTER_SHARED_PREF)
-                .addComment("Call this function to unregister SharedPreference callback")
-                .addStatement("%N.%N(this)",NameStore.Variable.SHARED_PREF_VALUE,
-                    NameStore.Method.UNREGISTER_SHARED_PREF_LISTENER).build())
     }
+
+    private fun placeHolder(at: String): String{
+        if (at.equals(Float::class.simpleName)){
+            return "%Lf"
+        }else if(at.equals(String::class.simpleName)){
+            return "%S"
+        }
+        return "%L"
+    }
+
 
     private fun pickAnnotation(buildReadSharedPrefValueBuilder:
                    FunSpec.Builder,
@@ -284,11 +304,12 @@ internal object ProcessorHelper {
                         className,
                         annotatedParam.simpleName,
                         NameStore.Variable.SHARED_PREF_VALUE,
-                        valueSharedPref.defaultValue::class.simpleName.toString(),
-                        valueSharedPref.key,
-                        valueSharedPref.defaultValue
-                    )
-            }else if (an == ReadString::class.simpleName) {
+                        "StringSet",
+                        valueSharedPref.key,"mutableSetOf(\"\")")
+
+            }
+
+            if (an == ReadString::class.simpleName) {
                 val  valueSharedPref = annotatedParam.getAnnotation(ReadString::class.java)
                 if (valueSharedPref != null)
                     buildReadSharedPrefValueBuilder.addStatement(
@@ -297,12 +318,13 @@ internal object ProcessorHelper {
                         className,
                         annotatedParam.simpleName,
                         NameStore.Variable.SHARED_PREF_VALUE,
-                        valueSharedPref.defaultValue::class.simpleName.toString(),
+                        String::class.simpleName.toString(),
                         valueSharedPref.key,
                         valueSharedPref.defaultValue
                     )
 
-            }else if (an == ReadInt::class.simpleName) {
+            }
+            if (an == ReadInt::class.simpleName) {
                 val valueSharedPref = annotatedParam.getAnnotation(ReadInt::class.java)
                 if (valueSharedPref != null)
                     buildReadSharedPrefValueBuilder.addStatement(
@@ -311,12 +333,13 @@ internal object ProcessorHelper {
                         className,
                         annotatedParam.simpleName,
                         NameStore.Variable.SHARED_PREF_VALUE,
-                        valueSharedPref.defaultValue::class.simpleName.toString(),
+                        Int::class.simpleName.toString(),
                         valueSharedPref.key,
                         valueSharedPref.defaultValue
                     )
 
-            }else if (an == ReadLong::class.simpleName) {
+            }
+            if (an == ReadLong::class.simpleName) {
                 val valueSharedPref = annotatedParam.getAnnotation(ReadLong::class.java)
                 if (valueSharedPref != null)
                     buildReadSharedPrefValueBuilder.addStatement(
@@ -325,12 +348,13 @@ internal object ProcessorHelper {
                         className,
                         annotatedParam.simpleName,
                         NameStore.Variable.SHARED_PREF_VALUE,
-                        valueSharedPref.defaultValue::class.simpleName.toString(),
+                        Long::class.java.simpleName.toString(),
                         valueSharedPref.key,
                         valueSharedPref.defaultValue
                     )
 
-            } else if (an == ReadFloat::class.simpleName) {
+            }
+            if (an == ReadFloat::class.simpleName) {
                 val valueSharedPref = annotatedParam.getAnnotation(ReadFloat::class.java)
                 if (valueSharedPref != null)
                     buildReadSharedPrefValueBuilder.addStatement(
@@ -339,7 +363,7 @@ internal object ProcessorHelper {
                         className,
                         annotatedParam.simpleName,
                         NameStore.Variable.SHARED_PREF_VALUE,
-                        valueSharedPref.defaultValue::class.simpleName.toString(),
+                        Float::class.simpleName.toString(),
                         valueSharedPref.key,
                         valueSharedPref.defaultValue
                     )
@@ -352,13 +376,13 @@ internal object ProcessorHelper {
     private fun wipeOutSharedPref(classBuilder: TypeSpec.Builder){
         //Generate code to clear the sharedpreference
         classBuilder.addFunction(FunSpec.builder(NameStore.Method.CLEAR_SHARE_PREF)
-            .addStatement("%L.clear().commit()", NameStore.Variable.SHARED_EDITOR)
+            .addStatement("%L.clear().apply()", NameStore.Variable.SHARED_EDITOR)
             .build())
 
         //Remove an item from SharedPreferences
         classBuilder.addFunction(FunSpec.builder(NameStore.Method.REMOVE_FROM_SHARE_PREF)
             .addParameter(NameStore.Variable.SHARED_VALUE_KEY, String::class)
-            .addStatement("%L.remove(%L).commit()",
+            .addStatement("%L.remove(%L).apply()",
                 NameStore.Variable.SHARED_EDITOR, NameStore.Variable.SHARED_VALUE_KEY)
             .build())
 
@@ -395,7 +419,7 @@ internal object ProcessorHelper {
                     NameStore.Variable.SHARED_VALUE_KEY,
                     NameStore.Variable.ARGUMENT
                 )
-                builder.addCode("${NameStore.Variable.SHARED_EDITOR}.commit() \n")
+                builder.addCode("${NameStore.Variable.SHARED_EDITOR}.apply() \n")
                 classBuilder.addFunction(builder.build())
             }
         }
