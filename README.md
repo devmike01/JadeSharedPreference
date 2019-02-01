@@ -8,6 +8,8 @@ A lite weight SharedPreference library which uses annotation processing to gener
 
 ```kotin
 class InecBox(context: Context) {
+
+    val TAG: String = "InecBox"
 	
     //Read item from JadeSharedPreference	
     @ReadString("ballot")
@@ -22,7 +24,13 @@ class InecBox(context: Context) {
     }
     
     fun readBallot(){
-    	Log.d(InecBox::class.simpleName, ballotPaper)
+    	Log.d(TAG, ballotPaper)
+    }
+
+    //Listen to String changes in realtime
+    @ReadString("ballot")
+    fun readStringChanges(s: String){
+    	Log.d(TAG, s)
     }
     
 }
