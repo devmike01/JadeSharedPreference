@@ -16,7 +16,7 @@ class InecBox(context: Context) {
     @ReadString("ballot")
     var ballotPaper: String? = null
 
-    private var jsp :JadeSharedPreference jsp =JadeSharedPreference.plug(this, context)
+    private var jsp :JadeSharedPreference =JadeSharedPreference.plug(this, context)
 
     @SharedPref("key")
     fun inecBox() {
