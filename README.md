@@ -8,7 +8,7 @@ A lite weight SharedPreference library which uses annotation processing to gener
 * Listen to value changes in realtime
 
 ```kotin
-class InecBox(context: Context) {
+class InecBox @SharedPref("key") constructor(context: Context) {
 
     val TAG: String = "InecBox"
 	
@@ -18,7 +18,6 @@ class InecBox(context: Context) {
 
     private var jsp :JadeSharedPreference =JadeSharedPreference.plug(this, context)
 
-    @SharedPref("key")
     fun inecBox() {
     	//Insert item to JadeSharedPreference
         jsp.insert("ballot", "Ballot Paper")
