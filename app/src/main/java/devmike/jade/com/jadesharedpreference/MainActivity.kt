@@ -24,23 +24,27 @@ class MainActivity @SharedPref("sharedSetKey") constructor(): AppCompatActivity(
 
     //Read string from JadeSharedPreference
     @ReadString("string")
-    public lateinit var mString: String
+    lateinit var mString: String
 
     //Read Integer from JadeSharedPreference
     @ReadInt("integer_anything")
-    public var mInteger: Int =0
+    var mInteger: Int =0
 
     //Read Long from JadeSharedPreference
     @ReadLong("long_")
-    public var mLong: Long =0
+    var mLong: Long =0
 
     //Read Float from JadeSharedPreference
     @ReadFloat("float_key")
-    public var mFloat: Float =0f
+    var mFloat: Float =0f
 
     //Read StringSet from JadeSharedPreference
     @ReadStringSet("stringset__")
-    public var mStringSet: MutableSet<String> = mutableSetOf()
+    lateinit var mStringSet: MutableSet<String>
+    
+    @ReadAll
+    lateinit var mMapAll: Map<String, *>
+
 
     //@SharedPref("key")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,9 +64,12 @@ class MainActivity @SharedPref("sharedSetKey") constructor(): AppCompatActivity(
         save_btn4.setOnClickListener(this::btnTestOne)
         save_btn5.setOnClickListener(this::btnTestOne)
 
+
+        Log.d("MainActivity", mMapAll.toString())
+
     }
 
-    public fun btnTestOne(v: View){
+    fun btnTestOne(v: View){
         /**
          * Click to write to JadeSharedPreference
          */
@@ -105,5 +112,10 @@ class MainActivity @SharedPref("sharedSetKey") constructor(): AppCompatActivity(
     @ReadStringSet("stringset__")
     fun stringSetChanges(set: MutableSet<String>){
         read_5.text = set.toString()
+    }
+
+    @ReadAll
+    fun readAllItems(allItems: MutableMap<String, *>){
+        Log.d("MainActivity", allItems.toString())
     }
 }

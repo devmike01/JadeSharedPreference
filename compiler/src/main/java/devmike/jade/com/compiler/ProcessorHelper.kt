@@ -5,6 +5,7 @@ import devmike.jade.com.annotations.SharedPref
 import devmike.jade.com.annotations.read.*
 import devmike.jade.com.processor.NameStore
 import java.io.File
+import java.lang.NullPointerException
 import java.util.EnumSet.range
 import java.util.HashSet
 import javax.annotation.processing.ProcessingEnvironment
@@ -18,6 +19,7 @@ internal object ProcessorHelper {
     const val KAPT_KOTLIN_GENERATED = "kapt.kotlin.generated"
     private lateinit var buildClassAccessBuilder: FunSpec.Builder
     private lateinit var sharedPrefListenerBuilder: FunSpec.Builder
+    private lateinit var readAllBuilder : FunSpec.Builder
 
     public fun process(
         processingEnv: ProcessingEnvironment,
@@ -170,7 +172,8 @@ internal object ProcessorHelper {
                         ReadLong::class.simpleName,
                         ReadStringSet::class.simpleName,
                         ReadFloat::class.simpleName,
-                        ReadInt::class.simpleName
+                        ReadInt::class.simpleName,
+                        ReadAll::class.simpleName
                     )
 
                     //Select the annotations and use it to generate the appropriate method
@@ -195,16 +198,17 @@ internal object ProcessorHelper {
                     val readIntAn = annotatedMethod.getAnnotation(ReadInt::class.java)
                     val readLongAn = annotatedMethod.getAnnotation(ReadLong::class.java)
                     val readFloatAn = annotatedMethod.getAnnotation(ReadFloat::class.java)
+                    val readAll = annotatedMethod.getAnnotation(ReadAll::class.java)
 
 
                     if (readFloatAn != null){
-                        annotationBuilder(className,classBuilder,
+                        annotationBuilder(className,
                             annotatedMethod, Float::class.simpleName, readFloatAn.defaultValue,
                             readFloatAn.key)
                     }
 
                     if(readStringAn != null){
-                        annotationBuilder(className,classBuilder,
+                        annotationBuilder(className,
                             annotatedMethod,
                             String::class.java.simpleName,
                             readStringAn.defaultValue,
@@ -212,7 +216,7 @@ internal object ProcessorHelper {
                     }
 
                     if (readStringSetAn != null){
-                        annotationBuilder(className,classBuilder, annotatedMethod,
+                        annotationBuilder(className, annotatedMethod,
                             NameStore.Types.STRINGSET,
                             "mutableSetOf(\"\")",
                             readStringSetAn.key)
@@ -220,18 +224,22 @@ internal object ProcessorHelper {
                     }
 
                     if (readIntAn != null){
-                        annotationBuilder(className,
-                            classBuilder,
-                            annotatedMethod,
-                            Int::class.simpleName,
+                        annotationBuilder(className, annotatedMethod, Int::class.simpleName,
                             readIntAn.defaultValue,
                             readIntAn.key)
                     }
 
                     if (readLongAn != null){
 
-                        annotationBuilder(className,classBuilder, annotatedMethod,
+                        annotationBuilder(className, annotatedMethod,
                             LONG.simpleName, readLongAn.defaultValue, readLongAn.key)
+                    }
+
+                    if (readAll != null){
+                        annotationBuilder(className, annotatedMethod,
+                            MutableMap::class.java.name,
+                            null,
+                            NameStore.Variable.READ_ALL)
                     }
                 }
             }
@@ -251,31 +259,42 @@ internal object ProcessorHelper {
         }
     }
 
-    private fun annotationBuilder(className : ClassName,classBuilder: TypeSpec.Builder,
+    private fun annotationBuilder(className : ClassName,
                                   annotatedMethod: Element, annotatedVarType: String?,
-                                      defaultValue: Any, key: String){
+                                      defaultValue: Any?, key: String){
         if (annotatedVarType != null) {
-            listenerBuilder(className, classBuilder, annotatedMethod, annotatedVarType,
+            listenerBuilder(className, annotatedMethod, annotatedVarType,
                 defaultValue, key)
         }
     }
 
-    private fun listenerBuilder(className : ClassName, classBuilder: TypeSpec.Builder,
+    private fun listenerBuilder(className : ClassName,
                                 annotatedMethod: Element,
-                                annotatedVarType: String, defaultValue: Any, key: String){
+                                annotatedVarType: String, defaultValue: Any?, key: String){
 
         sharedPrefListenerBuilder
             .addComment("Get $annotatedVarType value from SharedPreference")
-            .addStatement("if(%N.equals(%S)){(%L as %L).%L(%L.get%L(%S, ${placeHolder(annotatedVarType)}))}",
-            NameStore.Variable.SHARED_VALUE_KEY,
-            key,
-            NameStore.Variable.CLASS_VAR,
-            className,
-            annotatedMethod.simpleName.toString(),
-            NameStore.Variable.SHARED_PREF_VALUE,
-            annotatedVarType,
-            key,
-            defaultValue)
+        if (key != NameStore.Variable.READ_ALL && defaultValue !=null) {
+            sharedPrefListenerBuilder.addStatement(
+                "if(%N.equals(%S)){(%L as %L).%L(%L.get%L(%S, ${placeHolder(annotatedVarType)}))}",
+                    NameStore.Variable.SHARED_VALUE_KEY,
+                    key,
+                    NameStore.Variable.CLASS_VAR,
+                    className,
+                    annotatedMethod.simpleName.toString(),
+                    NameStore.Variable.SHARED_PREF_VALUE,
+                    annotatedVarType,
+                    key,
+                    defaultValue
+                )
+        }else{
+            sharedPrefListenerBuilder.addStatement("(%L as %L).%L(%L.all)",
+                NameStore.Variable.CLASS_VAR,
+                className,
+                annotatedMethod.simpleName.toString(),
+                NameStore.Variable.SHARED_PREF_VALUE
+            )
+        }
 
     }
 
@@ -369,6 +388,23 @@ internal object ProcessorHelper {
                     )
 
                 //  }
+            }
+
+            if (an == ReadAll::class.simpleName){
+                val readAllAnnotation = annotatedParam.getAnnotation(ReadAll::class.java)
+                if(readAllAnnotation != null){
+                    try {
+                        buildReadSharedPrefValueBuilder.addStatement(
+                                "(%N as %L).%L = %N.all",
+                                NameStore.Variable.CLASS_VAR,
+                                className,
+                                annotatedParam.simpleName,
+                                NameStore.Variable.SHARED_PREF_VALUE
+                            )
+                    }catch (npe: NullPointerException){
+                        error(npe)
+                    }
+                }
             }
         }
     }

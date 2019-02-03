@@ -5,9 +5,9 @@ A lite weight SharedPreference library which uses annotation processing to gener
 * Write less code to configure JadeSharedPreference
 * Save multiple values to JadeSharedPrefence at onces
 * Read from JadeSharedPreference using just annotations `@Read...`)
-* Listen to value changes in realtime
+* Listen to value changes in real-time
 
-```kotin
+```kotlin
 class InecBox @SharedPref("key") constructor(context: Context) {
 
     val TAG: String = "InecBox"
@@ -54,8 +54,10 @@ allprojects {
 		kapt 'com.github.devmike01.JadeSharedPreference:compiler:1.2.15'
 	}	
 ```
-##### Note: Add `apply plugin: 'kotlin-kapt'` - if you don't already have it, to your app `build.gradle` to allow the the processor generates the necessary codes.
+> Note: Add `apply plugin: 'kotlin-kapt'` - if you don't already have it, to your app `build.gradle` to allow the the processor generates the necessary codes.
 
+Contributions are highly welcome. There're some features I intend to add in the future. They're listed below:
+* Lint for checking
 
 License
 -------

@@ -28,6 +28,7 @@ public object NameStore {
         const val CLASS_VAR ="mClass"
         const val SHAREDPREF_LISTENER ="sharedPrefListener"
         const val ARGUMENT ="arg0"
+        const val READ_ALL = "Hey! Read All"
 
     }
 
