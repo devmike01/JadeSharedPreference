@@ -56,8 +56,6 @@ allprojects {
 ```
 > Note: Add `apply plugin: 'kotlin-kapt'` - if you don't already have it, to your app `build.gradle` to allow the the processor generates the necessary codes.
 
-Contributions are highly welcome. There're some features I intend to add in the future. They're listed below:
-* Lint for checking
 
 License
 -------
