@@ -14,17 +14,20 @@ public object JadeSharedPreference {
     private  var bindingClass: Class<*>? =null
 
     fun <T : Any> plug(targetClas: T, context: Context) : JadeSharedPreference{
-
-        this.bindingClass = targetClas.javaClass.classLoader?.loadClass( "${targetClas::class.java.`package`.name}.JSP"
-                + targetClas::class.simpleName)
+        val className: String ="${targetClas::class.java.`package`.name}.JSP$targetClas::class.simpleName"
+        this.bindingClass = targetClas.javaClass.classLoader?.loadClass( className)
         val method = bindingClass?.getMethod("plug", Context::class.java, Any::class.java)
 
         this.bindingClassNewInstance =bindingClass?.newInstance()
         try {
             method?.invoke(bindingClassNewInstance, context, targetClas)
 
-        }catch (uip: UninitializedPropertyAccessException){
-            throw NullPointerException("@SharedPref() is missing in your constructor")
+        }catch (ite: InvocationTargetException){
+            if(ite is NoSuchMethodException) {
+                throw NullPointerException("${method.toString()} does not exist")
+            }else if (ite is ClassNotFoundException){
+                throw NullPointerException("$className was not generated. Please fix the error and try again!")
+            }
         }
 
         return this
