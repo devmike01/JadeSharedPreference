@@ -1,4 +1,7 @@
 # JadeSharedPreference
+
+[![Android Arsenal]( https://img.shields.io/badge/Android%20Arsenal-JadeSharedPreference-green.svg?style=flat )]( https://android-arsenal.com/details/1/7504 )  [![CircleCI](https://circleci.com/gh/devmike01/JadeSharedPreference/tree/master.svg?style=svg)](https://circleci.com/gh/devmike01/JadeSharedPreference/tree/master)
+
 A lite weight SharedPreference library which uses annotation processing to generate boilerplate code for you.
 
 * Eliminate the whole `SharedPreference` code
@@ -6,8 +9,6 @@ A lite weight SharedPreference library which uses annotation processing to gener
 * Save multiple values to JadeSharedPrefence at onces
 * Read from JadeSharedPreference using just annotations `@Read...`)
 * Listen to value changes in real-time
-
-[![Android Arsenal]( https://img.shields.io/badge/Android%20Arsenal-JadeSharedPreference-green.svg?style=flat )]( https://android-arsenal.com/details/1/7504 )  [![CircleCI](https://circleci.com/gh/devmike01/JadeSharedPreference/tree/master.svg?style=svg)](https://circleci.com/gh/devmike01/JadeSharedPreference/tree/master)
 
 
 ```kotlin
