@@ -7,6 +7,9 @@ A lite weight SharedPreference library which uses annotation processing to gener
 * Read from JadeSharedPreference using just annotations `@Read...`)
 * Listen to value changes in real-time
 
+[![Android Arsenal]( https://img.shields.io/badge/Android%20Arsenal-JadeSharedPreference-green.svg?style=flat )]( https://android-arsenal.com/details/1/7504 )  [![CircleCI](https://circleci.com/gh/devmike01/JadeSharedPreference/tree/master.svg?style=svg)](https://circleci.com/gh/devmike01/JadeSharedPreference/tree/master)
+
+
 ```kotlin
 class InecBox @SharedPref("key") constructor(context: Context) {
 
@@ -36,7 +39,6 @@ class InecBox @SharedPref("key") constructor(context: Context) {
 }
 
 ```
-[![Android Arsenal]( https://img.shields.io/badge/Android%20Arsenal-JadeSharedPreference-green.svg?style=flat )]( https://android-arsenal.com/details/1/7504 )  [![CircleCI](https://circleci.com/gh/devmike01/JadeSharedPreference/tree/master.svg?style=svg)](https://circleci.com/gh/devmike01/JadeSharedPreference/tree/master)
 
 ### Configuration
 ##### Step 1: Add it in your root build.gradle at the end of repositories:
