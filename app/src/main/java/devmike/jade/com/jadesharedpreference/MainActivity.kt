@@ -64,6 +64,8 @@ class MainActivity @SharedPref("sharedSetKey") constructor(): AppCompatActivity(
         save_btn4.setOnClickListener(this::btnTestOne)
         save_btn5.setOnClickListener(this::btnTestOne)
 
+        val vClass =JSPTestClass()
+        vClass.insertValue("hello", "World Of Django")
 
         Log.d("MainActivity", mMapAll.toString())
 
