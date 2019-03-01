@@ -13,10 +13,6 @@ import devmike.jade.com.binder.JadeSharedPreference
 
     val TEST_KEY: String ="test_key"
 
-    @ReadInt("test")
-    var testInt: Int =9
-
-
     fun init(context: Context){
     }
 
@@ -25,8 +21,5 @@ import devmike.jade.com.binder.JadeSharedPreference
         jsp.insert("test", 200)
     }
 
-    public fun readTest(): Int{2
-        return testInt
-    }
 
 }

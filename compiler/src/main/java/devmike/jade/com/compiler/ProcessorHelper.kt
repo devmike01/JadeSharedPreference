@@ -325,7 +325,6 @@ internal object ProcessorHelper {
                         NameStore.Variable.SHARED_PREF_VALUE,
                         "StringSet",
                         valueSharedPref.key,"mutableSetOf(\"\")")
-
             }
 
             if (an == ReadString::class.simpleName) {
@@ -436,7 +435,6 @@ internal object ProcessorHelper {
         for (i in types.indices) {
             val type = types[i]
             if (type != null) {
-
                 //Start creating methods
                 builder =
                         FunSpec.builder(NameStore.Method.SHARED_PREF_INSERT_VALUE)
@@ -462,11 +460,8 @@ internal object ProcessorHelper {
 
     }
 
-    private fun unRegisterSharedPrefMethodBuilder(classBuilder: TypeSpec.Builder){
-        classBuilder
-    }
 
-    fun getTypeElementsToProcess(elements: Set<Element>, supportedAnnotations: Set<Element>): Set<TypeElement> {
+    private fun getTypeElementsToProcess(elements: Set<Element>, supportedAnnotations: Set<Element>): Set<TypeElement> {
         val typeElements = HashSet<TypeElement>()
         for (element in elements) {
             if (element is TypeElement) {
