@@ -1,4 +1,6 @@
 package devmike.jade.com.annotations
 
-class SettingsPreference {
+@Target(AnnotationTarget.CONSTRUCTOR)
+@Retention(AnnotationRetention.SOURCE)
+annotation class SettingsPreference {
 }

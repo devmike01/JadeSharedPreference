@@ -1,23 +1,27 @@
-package devmike.jade.com.processor
+package devmike.jade.com.compiler
 
 public object NameStore {
 
     //public fun getGeneratedClassName(className: String) = className.plus(BindingSuffix.
        // GENERATED_CLASS_SUFFIX)
 
-    public fun getGeneratedClassName(param: String) =
+    const val SUFFIX_SHAREDPREF_CLASSNAME: String ="JSP"
+    const val SUFFIX_PREFERENCE_CLASSNAME: String ="JSP_Preference"
+
+    public fun getGeneratedSharedPrefClassName(param: String) =
         "JSP$param"
 
 
+    public fun getGeneratedPreferenceClassName(param: String) =
+        "JSP_Preference$param"
+
+
+    const val KAPT_KOTLIN_GENERATED = "kapt.kotlin.generated"
+
     object Package {
-        const val LOGGER : String = "android.util"
         const val CONTEXT ="android.content"
-        const val JADEKNIFE_BASE ="devmike.jade.com_JadeSharedPreference"
         const val ANDROID_SHAREDPREF="android.content"
-        const val GENERATED_CLASS ="JadeSharedPreference"
-        const val CLASS_ ="kotlin"
-
-
+        const val ANDROID_PREFERENCE ="android.preference"
     }
 
     object Variable {
@@ -29,7 +33,7 @@ public object NameStore {
         const val SHAREDPREF_LISTENER ="sharedPrefListener"
         const val ARGUMENT ="arg0"
         const val READ_ALL = "Hey! Read All"
-
+        const val PREFERENCE ="settingPref"
     }
 
 
@@ -41,10 +45,11 @@ public object NameStore {
         const val ANDROID_SHARED_PREF_EDITOR ="SharedPreferences.Editor"
         const val STRING_SET ="Set<String>"
         const val STRING ="String"
+        const val PREFERENCE_MANAGER ="PreferenceManager"
     }
 
     object Method {
-
+        const val GET_DEFAULTSHAREDPREFERENCES ="getDefaultSharedPreferences"
         const val UNREGISTER_SHARED_PREF_LISTENER ="unregisterOnSharedPreferenceChangeListener"
         const val CONTEXT ="context"
         const val SHARED_PREF ="generateSharePref"

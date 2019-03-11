@@ -1,16 +1,16 @@
 package devmike.jade.com.jadesharedpreference
 
 import android.content.Context
+import devmike.jade.com.annotations.SettingsPreference
 import devmike.jade.com.annotations.SharedPref
-import devmike.jade.com.annotations.read.ReadInt
-import devmike.jade.com.annotations.read.ReadString
+import devmike.jade.com.annotations.sharedpreference.ReadString
 import devmike.jade.com.binder.JadeSharedPreference
 
- class TestClass
-@SharedPref("test0") constructor(context: Context){
+ class TestClass constructor(context: Context){
 
      var jsp: JadeSharedPreference = JadeSharedPreference.plug(this, context)
 
+    // @ReadString("string")
     val TEST_KEY: String ="test_key"
 
     fun init(context: Context){

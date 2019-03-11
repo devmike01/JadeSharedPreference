@@ -1,4 +1,5 @@
 package devmike.jade.com.compiler.factory
 
-enum class FactoryProcessor {
+enum class Factory {
+    SHAREDPREFERENCE, PREFERENCE
 }

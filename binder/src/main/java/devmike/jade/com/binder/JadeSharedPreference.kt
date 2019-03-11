@@ -14,7 +14,7 @@ public object JadeSharedPreference {
     private  var bindingClass: Class<*>? =null
 
     fun <T : Any> plug(targetClas: T, context: Context) : JadeSharedPreference{
-        val className: String ="${targetClas::class.java.`package`.name}.JSP${targetClas::class.simpleName}"
+        val className ="${targetClas::class.java.`package`.name}.JSP${targetClas::class.simpleName}"
         this.bindingClass = targetClas.javaClass.classLoader?.loadClass( className)
         val method = bindingClass?.getMethod("plug", Context::class.java, Any::class.java)
 
