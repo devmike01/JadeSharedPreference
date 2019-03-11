@@ -1,15 +1,14 @@
 package devmike.jade.com.compiler
 
-import com.squareup.kotlinpoet.*
 import devmike.jade.com.annotations.SettingsPreference
 import devmike.jade.com.compiler.sharedpreference.ProcessorHelper
 import devmike.jade.com.annotations.SharedPref
+import devmike.jade.com.annotations.preference.*
 import devmike.jade.com.annotations.sharedpreference.*
 import devmike.jade.com.compiler.preferences.PreferenceProcessorHelper
 import java.lang.IllegalArgumentException
 import javax.annotation.processing.*
 import javax.lang.model.element.TypeElement
-import javax.lang.model.util.Elements
 
 
 abstract class AnnotationProcessor : AbstractProcessor() {
@@ -38,10 +37,10 @@ abstract class AnnotationProcessor : AbstractProcessor() {
             //Generates codes for Preference
             return mutableSetOf(
                 SettingsPreference::class.java.name,
-                devmike.jade.com.annotations.preference.ReadFloat::class.java.name, ReadInt::class.java.name,
-                devmike.jade.com.annotations.preference.ReadString::class.java.name,
-                devmike.jade.com.annotations.preference.ReadLong::class.java.name,
-                devmike.jade.com.annotations.preference.ReadStringSet::class.java.name)
+                ReadPrefFloat::class.java.name, ReadInt::class.java.name,
+                ReadPrefString::class.java.name,
+                ReadPrefLong::class.java.name,
+                ReadPrefStringSet::class.java.name)
         }else if(prefName() == NameStore.SUFFIX_SHAREDPREF_CLASSNAME){
             //Generate codes for SharedPreference
             return mutableSetOf(
