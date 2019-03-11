@@ -22,7 +22,6 @@ class PreferenceProcessorHelper {
 
         private lateinit var buildClassAccessBuilder: FunSpec.Builder
         private lateinit var sharedPrefListenerBuilder: FunSpec.Builder
-        private lateinit var readAllBuilder: FunSpec.Builder
         private lateinit var generatedRoot: String
         private lateinit var packageName: String
         private lateinit var classBuilder: TypeSpec.Builder
@@ -108,23 +107,23 @@ class PreferenceProcessorHelper {
                // val buildReadSharedPrefValueBuilder = FunSpec.builder(NameStore.Method.SHARED_PREF_READ_VALUE)
                  //   .addModifiers(KModifier.PRIVATE)
 
-                for (method in ElementFilter.constructorsIn(typeElement.enclosedElements)) {
-                    if (method != null) {
-                        //Create the method where we initialize the SharedPrefence
-                        val settingsPref = method.getAnnotation(SettingsPreference::class.java)
+                for (element in ElementFilter.constructorsIn(typeElement.enclosedElements)) {
+                    if (element != null) {
+                        //Create the element where we initialize the SharedPrefence
+                        val settingsPref = element.getAnnotation(SettingsPreference::class.java)
 
 
                         //Read data from annotations
-                        val readStringAn = method.getAnnotation(ReadPrefString::class.java)
-                        val readStringSetAn = method.getAnnotation(ReadPrefStringSet::class.java)
-                        val readIntAn = method.getAnnotation(ReadPrefInt::class.java)
-                        val readLongAn = method.getAnnotation(ReadPrefLong::class.java)
-                        val readFloatAn = method.getAnnotation(ReadPrefFloat::class.java)
-                        val readAll = method.getAnnotation(ReadAllPref::class.java)
+                        val readStringAn = element.getAnnotation(ReadPrefString::class.java)
+                        val readStringSetAn = element.getAnnotation(ReadPrefStringSet::class.java)
+                        val readIntAn = element.getAnnotation(ReadPrefInt::class.java)
+                        val readLongAn = element.getAnnotation(ReadPrefLong::class.java)
+                        val readFloatAn = element.getAnnotation(ReadPrefFloat::class.java)
+                        val readAll = element.getAnnotation(ReadAllPref::class.java)
 
                         if (settingsPref != null) {
 
-                            //Generate code for a method that access preference
+                            //Generate code for a element that access preference
                             buildSharedPrefBuilder.addModifiers(KModifier.PUBLIC)
                                 .addStatement(
                                     "this.%L = %L.%N(%L)", //Generate the sharedpreference
@@ -144,11 +143,11 @@ class PreferenceProcessorHelper {
                                 .addStatement("%N()", NameStore.Method.SHARED_PREF_READ_VALUE)
 
 
-
+                            //Read Preference file if a variable is annotated
                             if (readFloatAn != null) {
                                 annotationBuilder(
                                     className,
-                                    method, Float::class.simpleName, readFloatAn.defaultValue,
+                                    element, Float::class.simpleName, readFloatAn.defaultValue,
                                     readFloatAn.key
                                 )
                             }
@@ -156,7 +155,7 @@ class PreferenceProcessorHelper {
                             if (readStringAn != null) {
                                 annotationBuilder(
                                     className,
-                                    method,
+                                    element,
                                     String::class.java.simpleName,
                                     readStringAn.defaultValue,
                                     readStringAn.key
@@ -165,7 +164,7 @@ class PreferenceProcessorHelper {
 
                             if (readStringSetAn != null) {
                                 annotationBuilder(
-                                    className, method,
+                                    className, element,
                                     NameStore.Types.STRINGSET,
                                     "mutableSetOf(\"\")",
                                     readStringSetAn.key
@@ -175,7 +174,7 @@ class PreferenceProcessorHelper {
 
                             if (readIntAn != null) {
                                 annotationBuilder(
-                                    className, method, Int::class.simpleName,
+                                    className, element, Int::class.simpleName,
                                     readIntAn.defaultValue,
                                     readIntAn.key
                                 )
@@ -184,14 +183,14 @@ class PreferenceProcessorHelper {
                             if (readLongAn != null) {
 
                                 annotationBuilder(
-                                    className, method,
+                                    className, element,
                                     LONG.simpleName, readLongAn.defaultValue, readLongAn.key
                                 )
                             }
 
                             if (readAll != null) {
                                 annotationBuilder(
-                                    className, method,
+                                    className, element,
                                     MutableMap::class.java.name,
                                     null,
                                     NameStore.Variable.READ_ALL

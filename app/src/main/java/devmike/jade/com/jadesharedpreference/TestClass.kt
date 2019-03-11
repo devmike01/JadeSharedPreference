@@ -7,7 +7,7 @@ import devmike.jade.com.annotations.preference.ReadPrefString
 import devmike.jade.com.annotations.sharedpreference.ReadString
 import devmike.jade.com.binder.JadeSharedPreference
 
- class TestClass  constructor(context: Context){
+ class TestClass @SettingsPreference constructor(context: Context){
 
      var jsp: JadeSharedPreference = JadeSharedPreference.plug(this, context)
 
@@ -15,6 +15,7 @@ import devmike.jade.com.binder.JadeSharedPreference
     var TEST_KEY: String ="test_key"
 
     fun init(context: Context){
+        jsp.plug(this, context)
     }
 
 

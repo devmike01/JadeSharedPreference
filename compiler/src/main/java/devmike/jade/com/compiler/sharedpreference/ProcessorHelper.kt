@@ -2,6 +2,7 @@ package devmike.jade.com.compiler.sharedpreference
 
 import com.squareup.kotlinpoet.*
 import devmike.jade.com.annotations.SharedPref
+import devmike.jade.com.annotations.preference.*
 import devmike.jade.com.annotations.sharedpreference.*
 import devmike.jade.com.compiler.FileGenerator
 import devmike.jade.com.compiler.NameStore
@@ -19,7 +20,6 @@ class ProcessorHelper {
 
         private lateinit var buildClassAccessBuilder: FunSpec.Builder
         private lateinit var sharedPrefListenerBuilder: FunSpec.Builder
-        private lateinit var readAllBuilder : FunSpec.Builder
         private lateinit var generatedRoot: String
         private lateinit var packageName : String
         private lateinit var classBuilder : TypeSpec.Builder
@@ -99,13 +99,22 @@ class ProcessorHelper {
 
 
 
-                for (method in ElementFilter.constructorsIn(typeElement.enclosedElements)) {
-                    if (method != null) {
-                        //Create the method where we initialize the SharedPrefence
-                        val baseSharedPrefA = method.getAnnotation(SharedPref::class.java)
+                for (element in ElementFilter.constructorsIn(typeElement.enclosedElements)) {
+                    if (element != null) {
+                        //Create the element where we initialize the SharedPrefence
+                        val baseSharedPrefA = element.getAnnotation(SharedPref::class.java)
+
+
+                        //Read data from annotations
+                        val readStringAn = element.getAnnotation(ReadString::class.java)
+                        val readStringSetAn = element.getAnnotation(ReadStringSet::class.java)
+                        val readIntAn = element.getAnnotation(ReadInt::class.java)
+                        val readLongAn = element.getAnnotation(ReadLong::class.java)
+                        val readFloatAn = element.getAnnotation(ReadFloat::class.java)
+                        val readAll = element.getAnnotation(ReadAll::class.java)
 
                         if (baseSharedPrefA != null) {
-                            //Generate the method that access SharedPreferences
+                            //Generate the element that access SharedPreferences
                             buildSharedPrefBuilder.addModifiers(KModifier.PUBLIC)
                                 .addStatement(
                                     "this.%L = %N.getSharedPreferences(%S, %L.%L)", //Generate the sharedpreference
@@ -128,54 +137,102 @@ class ProcessorHelper {
                                 .addStatement("%N()", NameStore.Method.SHARED_PREF_READ_VALUE)
                             // .addComment("Read the saved value from the SharedPreference")
 
-                        }
 
 
-
-
-                        //Create method for inserting values into shared preference
-                        insertValueMethodBuilder(classBuilder)
-
-
-
-                        val buildReadSharedPrefValueBuilder = FunSpec.builder(NameStore.Method.SHARED_PREF_READ_VALUE)
-                            .addModifiers(KModifier.PRIVATE)
-                        //Generate the statement that saved value into the SharedPreference
-                        for (annotatedParam in ElementFilter.fieldsIn(typeElement.enclosedElements)) {
-                            if (annotatedParam != null) {
-                                val annotatedList = listOf(
-                                    ReadString::class.simpleName,
-                                    ReadLong::class.simpleName,
-                                    ReadStringSet::class.simpleName,
-                                    ReadFloat::class.simpleName,
-                                    ReadInt::class.simpleName,
-                                    ReadAll::class.simpleName
-                                )
-
-                                //Select the annotations and use it to generate the appropriate method
-                                pickAnnotation(
-                                    buildReadSharedPrefValueBuilder, annotatedList,
-                                    annotatedParam, className
+                            if (readFloatAn != null) {
+                                annotationBuilder(
+                                    className,
+                                    element, Float::class.simpleName, readFloatAn.defaultValue,
+                                    readFloatAn.key
                                 )
                             }
 
+                            if (readStringAn != null) {
+                                annotationBuilder(
+                                    className,
+                                    element,
+                                    String::class.java.simpleName,
+                                    readStringAn.defaultValue,
+                                    readStringAn.key
+                                )
+                            }
+
+                            if (readStringSetAn != null) {
+                                annotationBuilder(
+                                    className, element,
+                                    NameStore.Types.STRINGSET,
+                                    "mutableSetOf(\"\")",
+                                    readStringSetAn.key
+                                )
+
+                            }
+
+                            if (readIntAn != null) {
+                                annotationBuilder(
+                                    className, element, Int::class.simpleName,
+                                    readIntAn.defaultValue,
+                                    readIntAn.key
+                                )
+                            }
+
+                            if (readLongAn != null) {
+
+                                annotationBuilder(
+                                    className, element,
+                                    LONG.simpleName, readLongAn.defaultValue, readLongAn.key
+                                )
+                            }
+
+                            if (readAll != null) {
+                                annotationBuilder(
+                                    className, element,
+                                    MutableMap::class.java.name,
+                                    null,
+                                    NameStore.Variable.READ_ALL
+                                )
+                            }
+
+
+
+                            val buildReadSharedPrefValueBuilder = FunSpec.builder(NameStore.Method.SHARED_PREF_READ_VALUE)
+                                .addModifiers(KModifier.PRIVATE)
+                            //Generate the statement that saved value into the SharedPreference
+                            for (annotatedParam in ElementFilter.fieldsIn(typeElement.enclosedElements)) {
+                                if (annotatedParam != null) {
+                                    val annotatedList = listOf(
+                                        ReadString::class.simpleName,
+                                        ReadLong::class.simpleName,
+                                        ReadStringSet::class.simpleName,
+                                        ReadFloat::class.simpleName,
+                                        ReadInt::class.simpleName,
+                                        ReadAll::class.simpleName
+                                    )
+
+                                    pickAnnotation(
+                                        buildReadSharedPrefValueBuilder, annotatedList,
+                                        annotatedParam, className
+                                    )
+                                }
+
+                            }
+
+
+                            //Create element for inserting values into shared preference
+                            insertValueMethodBuilder(classBuilder)
+                            classBuilder.addFunction(buildReadSharedPrefValueBuilder.build())
+                            classBuilder.addFunction(buildClassAccessBuilder.build())
+                            classBuilder.addFunction(buildSharedPrefBuilder.build())
+                            classBuilder.addFunction(sharedPrefListenerBuilder.build())
+                            wipeOutSharedPref(classBuilder)
+
+                            val file = File(generatedRoot).apply { mkdir() }
+
+
+                            FileGenerator.builder(packageName, NameStore.getGeneratedSharedPrefClassName(typeName))
+                                .addType(classBuilder.build())
+                                .addFile(file)
+                                .build()
                         }
-
-
-
-                        classBuilder.addFunction(buildClassAccessBuilder.build())
-                        classBuilder.addFunction(buildReadSharedPrefValueBuilder.build())
-                        classBuilder.addFunction(buildSharedPrefBuilder.build())
-                        classBuilder.addFunction(sharedPrefListenerBuilder.build())
-                        wipeOutSharedPref(classBuilder)
-
-                        val file = File(generatedRoot).apply { mkdir() }
-
-                        FileGenerator.builder(packageName,
-                            NameStore.getGeneratedSharedPrefClassName(typeName))
-                            .addType(classBuilder.build())
-                            .addFile(file)
-                            .build()
 
 
                     }

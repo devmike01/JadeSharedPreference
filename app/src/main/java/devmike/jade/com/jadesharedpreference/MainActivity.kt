@@ -12,7 +12,7 @@ import devmike.jade.com.binder.JadeSharedPreference
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity constructor(): AppCompatActivity() {
+class MainActivity @SharedPref("setting") constructor(): AppCompatActivity() {
 
 
     private lateinit var jsp :JadeSharedPreference

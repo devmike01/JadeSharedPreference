@@ -2,9 +2,6 @@ package devmike.jade.com.compiler
 
 public object NameStore {
 
-    //public fun getGeneratedClassName(className: String) = className.plus(BindingSuffix.
-       // GENERATED_CLASS_SUFFIX)
-
     const val SUFFIX_SHAREDPREF_CLASSNAME: String ="JSP"
     const val SUFFIX_PREFERENCE_CLASSNAME: String ="JSP_Preference"
 
@@ -58,17 +55,11 @@ public object NameStore {
         const val INIT_SHAREDPREF ="plug"
         const val CLEAR_SHARE_PREF ="clearSharedPref"
         const val REMOVE_FROM_SHARE_PREF= "removeValue"
-        const val ADD_OTHER_SET ="customSet"
-        const val UNPLUG ="unplug"
         const val UNREGISTER_SHARED_PREF ="unregisterSharedPref"
         const val SHAREDPREFERENCE_CHANGED="onSharedPreferenceChanged"
     }
 
     object Types{
-        const val STRING ="String"
-        const val FLOAT ="Float"
-        const val INT ="Int"
-        const val LONG ="Long"
         const val STRINGSET ="StringSet"
     }
 
