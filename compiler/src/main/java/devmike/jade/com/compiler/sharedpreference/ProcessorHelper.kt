@@ -137,7 +137,7 @@ class ProcessorHelper {
                                 .addStatement("%N()", NameStore.Method.SHARED_PREF_READ_VALUE)
                             // .addComment("Read the saved value from the SharedPreference")
 
-
+/*
 
                             if (readFloatAn != null) {
                                 annotationBuilder(
@@ -192,7 +192,70 @@ class ProcessorHelper {
                                 )
                             }
 
+                            */
 
+
+                            for (annotatedMethod in ElementFilter.methodsIn(typeElement.enclosedElements)) {
+                                if (annotatedMethod != null) {
+
+                                    //Add all the annotation to a set
+
+                                    //Loop through all the annotated methods
+
+                                    if (readFloatAn != null) {
+                                        annotationBuilder(
+                                            className,
+                                            annotatedMethod, Float::class.simpleName, readFloatAn.defaultValue,
+                                            readFloatAn.key
+                                        )
+                                    }
+
+                                    if (readStringAn != null) {
+                                        annotationBuilder(
+                                            className,
+                                            annotatedMethod,
+                                            String::class.java.simpleName,
+                                            readStringAn.defaultValue,
+                                            readStringAn.key
+                                        )
+                                    }
+
+                                    if (readStringSetAn != null) {
+                                        annotationBuilder(
+                                            className, annotatedMethod,
+                                            NameStore.Types.STRINGSET,
+                                            "mutableSetOf(\"\")",
+                                            readStringSetAn.key
+                                        )
+
+                                    }
+
+                                    if (readIntAn != null) {
+                                        annotationBuilder(
+                                            className, annotatedMethod, Int::class.simpleName,
+                                            readIntAn.defaultValue,
+                                            readIntAn.key
+                                        )
+                                    }
+
+                                    if (readLongAn != null) {
+
+                                        annotationBuilder(
+                                            className, annotatedMethod,
+                                            LONG.simpleName, readLongAn.defaultValue, readLongAn.key
+                                        )
+                                    }
+
+                                    if (readAll != null) {
+                                        annotationBuilder(
+                                            className, annotatedMethod,
+                                            MutableMap::class.java.name,
+                                            null,
+                                            NameStore.Variable.READ_ALL
+                                        )
+                                    }
+                                }
+                            }
 
                             val buildReadSharedPrefValueBuilder = FunSpec.builder(NameStore.Method.SHARED_PREF_READ_VALUE)
                                 .addModifiers(KModifier.PRIVATE)

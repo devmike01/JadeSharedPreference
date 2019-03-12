@@ -3,6 +3,7 @@ package devmike.jade.com.jadesharedpreference
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.support.annotation.VisibleForTesting
 import android.util.Log
 import android.view.View
 import devmike.jade.com.annotations.SettingsPreference
@@ -13,7 +14,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity @SharedPref("setting") constructor(): AppCompatActivity() {
-
 
     private lateinit var jsp :JadeSharedPreference
 
@@ -40,15 +40,11 @@ class MainActivity @SharedPref("setting") constructor(): AppCompatActivity() {
     @ReadAll
     lateinit var mMapAll: Map<String, *>
 
-
-    private val settingPref = PreferenceManager.getDefaultSharedPreferences(this)
-
-
     //@SharedPref("key")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        jsp =JadeSharedPreference.plug(this, this)
+        jsp =JadeSharedPreference.apply(this, this)
 
 
         read_1.text = mString
@@ -67,7 +63,6 @@ class MainActivity @SharedPref("setting") constructor(): AppCompatActivity() {
         //vClass.insertValue("hello", "World Of Django")
 
         Log.d("MainActivity", mMapAll.toString())
-
     }
 
     fun btnTestOne(v: View){
@@ -119,4 +114,10 @@ class MainActivity @SharedPref("setting") constructor(): AppCompatActivity() {
     fun readAllItems(allItems: MutableMap<String, *>){
         Log.d("MainActivity", allItems.toString())
     }
+
+    @VisibleForTesting
+    fun writeString(key: String){
+        jsp.insert(key, TestConstants.FAKE_TEST_STRING)
+    }
+
 }

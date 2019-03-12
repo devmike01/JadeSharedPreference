@@ -3,35 +3,81 @@ package devmike.jade.com.binder
 import android.app.Activity
 import android.content.Context
 import android.util.Log
+import devmike.jade.com.annotations.SettingsPreference
+import devmike.jade.com.annotations.SharedPref
 import java.lang.Error
+import java.lang.Exception
 import java.lang.IllegalArgumentException
 import java.lang.NullPointerException
+import java.lang.annotation.ElementType
+import java.lang.reflect.Constructor
 import java.lang.reflect.InvocationTargetException
+import java.lang.reflect.Method
+import kotlin.reflect.KFunction
+import kotlin.reflect.full.findAnnotation
+import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.primaryConstructor
+import kotlin.reflect.jvm.javaField
 
 public object JadeSharedPreference {
 
     private var bindingClassNewInstance: Any? =null
     private  var bindingClass: Class<*>? =null
+    private var method: Method? =null
 
-    fun <T : Any> plug(targetClas: T, context: Context) : JadeSharedPreference{
-        val className ="${targetClas::class.java.`package`.name}.JSP${targetClas::class.simpleName}"
-        this.bindingClass = targetClas.javaClass.classLoader?.loadClass( className)
-        val method = bindingClass?.getMethod("plug", Context::class.java, Any::class.java)
+    fun <T : Any> preference(targetClass: T, context: Context) : JadeSharedPreference{
 
-        this.bindingClassNewInstance =bindingClass?.newInstance()
+        val className ="${targetClass::class.java.`package`.name}.JSP_Preference${targetClass::class.simpleName}"
+
+        // val className ="${targetClass::class.java.`package`.name}JSP_Preference${targetClass::class.simpleName}"
+
         try {
-            method?.invoke(bindingClassNewInstance, context, targetClas)
 
-        }catch (ite: InvocationTargetException){
+            //Wire up plug() method to generated SharedPreference file
+            this.bindingClass = targetClass.javaClass.classLoader?.loadClass( className)
+            method = bindingClass?.getMethod("plug", Context::class.java, Any::class.java)
+
+            this.bindingClassNewInstance =bindingClass?.newInstance()
+            method?.invoke(bindingClassNewInstance, context, targetClass)
+
+        }catch (ite: Exception){
             if(ite is NoSuchMethodException) {
-                throw NullPointerException("${method.toString()} does not exist")
+                throw NullPointerException("${method?.toString()} does not exist")
             }else if (ite is ClassNotFoundException){
-                throw NullPointerException("$className was not generated. Please fix the error and try again!")
+                throw ClassNotFoundException("$className was not generated. Please fix the error and try again!")
             }
         }
 
         return this
     }
+
+    //Access point for SharedPreference
+    fun <T : Any> apply(targetClass: T, context: Context) : JadeSharedPreference{
+
+        val className ="${targetClass::class.java.`package`.name}.JSP${targetClass::class.simpleName}"
+
+       // val className ="${targetClass::class.java.`package`.name}JSP_Preference${targetClass::class.simpleName}"
+
+        try {
+
+            //Wire up plug() method to generated SharedPreference file
+            this.bindingClass = targetClass.javaClass.classLoader?.loadClass( className)
+            method = bindingClass?.getMethod("plug", Context::class.java, Any::class.java)
+
+            this.bindingClassNewInstance =bindingClass?.newInstance()
+            method?.invoke(bindingClassNewInstance, context, targetClass)
+
+        }catch (ite: Exception){
+            if(ite is NoSuchMethodException) {
+                throw NullPointerException("${method?.toString()} does not exist")
+            }else if (ite is ClassNotFoundException){
+                throw ClassNotFoundException("$className was not generated. Please fix the error and try again!")
+            }
+        }
+
+        return this
+    }
+
 
     fun <T : Any> insert(key: String, value: T){
         if (value is String) {
