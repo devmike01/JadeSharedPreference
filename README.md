@@ -2,13 +2,25 @@
 
 [![Android Arsenal]( https://img.shields.io/badge/Android%20Arsenal-JadeSharedPreference-green.svg?style=flat )]( https://android-arsenal.com/details/1/7504 )  [![CircleCI](https://circleci.com/gh/devmike01/JadeSharedPreference/tree/master.svg?style=svg)](https://circleci.com/gh/devmike01/JadeSharedPreference/tree/master)
 
-A lite weight SharedPreference library which uses annotation processing to generate codes that let.
+A light weight library which uses annotation processing to generate codes that let you read and write to both `SharedPreferences` and `Preference` files.
 
-* Eliminate the whole `SharedPreference` code
+* Eliminate the whole `SharedPreference` boilerplace codes
 * Write less code to configure JadeSharedPreference
-* Save multiple values to JadeSharedPrefence at onces
-* Read from JadeSharedPreference using just annotations `@Read...`)
+* Save multiple values to both `Preference` and `SharedPreferences` at onces
+* Read from `Preference` and `SharedPreferences` using just annotations `@Read...`)
 * Listen to value changes in real-time
+
+No one like writing lot of codes just to achieve a simple task. I mean, who does this:
+
+```kotlin
+    val sp: SharedPreference = getSharedPreferences("coconut_head", Context.MODE_PRIVATE)
+    val value: String? =sp.getString("key", null)
+```
+When you can achieve same thing with less line of codes. Such as this:
+```kotlin
+    @ReadString("key")
+    val value: String?= null
+```
 
 ### What's new in version `1.3.0`
 
@@ -23,7 +35,6 @@ class InecBox @SharedPref("key") @Preference constructor(context: Context) {
 
     val TAG: String = "InecBox"
 	
-    //Read item from JadeSharedPreference	
     @ReadString("ballot")
     var ballotPaper: String? = null
     
@@ -37,9 +48,7 @@ class InecBox @SharedPref("key") @Preference constructor(context: Context) {
     //Setup for Preference file
     private var jp :JadeSharedPreference =JadeSharedPreference.preference(this, context)
 
-    //Read and write to JadeSharedPreference
     fun inecBox() {
-    	//Insert item to JadeSharedPreference
         jsp.insert("ballot", "Ballot Paper")
     }
     
@@ -47,9 +56,7 @@ class InecBox @SharedPref("key") @Preference constructor(context: Context) {
     	Log.d(TAG, ballotPaper)
     }
     
-    //Read and write to Preference
     fun fakeInecBox() {
-    	//Insert item to JadeSharedPreference
         jp.insert("pref_ballot", "Fake Ballot Paper")
     }
     

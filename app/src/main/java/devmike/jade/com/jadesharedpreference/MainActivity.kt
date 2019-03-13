@@ -1,5 +1,7 @@
 package devmike.jade.com.jadesharedpreference
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.annotation.VisibleForTesting
@@ -43,7 +45,6 @@ class MainActivity @SharedPref("setting") constructor(): AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         jsp =JadeSharedPreference.apply(this, this)
-
 
         read_1.text = mString
         read_2.text = mInteger.toString()
