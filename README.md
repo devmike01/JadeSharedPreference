@@ -10,7 +10,7 @@ A light weight library which uses annotation processing to generate codes that l
 * Read from `Preference` and `SharedPreferences` using just annotations `@Read...`)
 * Listen to value changes in real-time
 
-No one like writing lot of codes just to achieve a simple task. I mean, who does this:
+No one like writing lot of codes just to do a simple task. I mean, who does this:
 
 ```kotlin
     val sp: SharedPreference = getSharedPreferences("coconut_head", Context.MODE_PRIVATE)
