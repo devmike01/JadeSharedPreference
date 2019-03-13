@@ -6,9 +6,10 @@ A light weight library which uses annotation processing to generate codes that l
 
 * Eliminate the whole `SharedPreference` boilerplace codes
 * Write less code to configure JadeSharedPreference
-* Save multiple values to both `Preference` and `SharedPreferences` at onces
-* Read from `Preference` and `SharedPreferences` using just annotations `@Read...`)
+* Save multiple values to `SharedPreferences` at onces
+* Read from `SharedPreferences` using just annotations `@Read...`)
 * Listen to value changes in real-time
+* Read/Write `Preference` data anywhere in your app
 
 No one like writing lot of codes just to do a simple task. I mean, who does this:
 
