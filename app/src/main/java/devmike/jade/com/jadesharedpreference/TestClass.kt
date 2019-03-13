@@ -1,34 +1,30 @@
 package devmike.jade.com.jadesharedpreference
 
 import android.content.Context
-import devmike.jade.com.annotations.SettingsPreference
-import devmike.jade.com.annotations.SharedPref
+import android.util.Log
+import devmike.jade.com.annotations.Preference
 import devmike.jade.com.annotations.preference.ReadPrefString
 import devmike.jade.com.binder.JadeSharedPreference
 import java.util.concurrent.CountDownLatch
 
-open class TestClass @SettingsPreference @SharedPref constructor(val context: Context){
+class TestClass @Preference constructor(val context: Context){
 
-     lateinit var jsp: JadeSharedPreference
+     var jsp: JadeSharedPreference = JadeSharedPreference.preference(this, context)
 
-     val countDown = CountDownLatch(1)
+    private val TAG = "TestClass"
 
      @ReadPrefString("string")
     lateinit var mString: String
 
-    fun init(){
-        jsp =JadeSharedPreference.preference(this, context)
-    }
 
+    fun writeTest(value: String){
 
-    public fun writeTest(value: String){
-        jsp.insert("test", value)
-        //countDown.await()
+        jsp.insert("string", value)
     }
 
      @ReadPrefString("string")
      fun listenToStringChanges(value: String){
-        // countDown.countDown()
+         Log.d(TAG, "VALUE: $value")
      }
 
     public fun getString(): String{

@@ -1,23 +1,10 @@
 package devmike.jade.com.binder
 
-import android.app.Activity
 import android.content.Context
-import android.util.Log
-import devmike.jade.com.annotations.SettingsPreference
-import devmike.jade.com.annotations.SharedPref
-import java.lang.Error
 import java.lang.Exception
 import java.lang.IllegalArgumentException
 import java.lang.NullPointerException
-import java.lang.annotation.ElementType
-import java.lang.reflect.Constructor
-import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
-import kotlin.reflect.KFunction
-import kotlin.reflect.full.findAnnotation
-import kotlin.reflect.full.memberProperties
-import kotlin.reflect.full.primaryConstructor
-import kotlin.reflect.jvm.javaField
 
 public object JadeSharedPreference {
 
@@ -80,6 +67,7 @@ public object JadeSharedPreference {
 
 
     fun <T : Any> insert(key: String, value: T){
+        try{
         if (value is String) {
             val insertStringFunc = bindingClass?.getMethod("insertValue", String::class.java,
                 String::class.java)
@@ -106,6 +94,11 @@ public object JadeSharedPreference {
             insertLongFunc?.invoke(this.bindingClassNewInstance, value, key)
         }else{
             throw IllegalArgumentException("Unsupported value type $value")
+        }
+            }catch (e: Exception){
+            if (e is NoSuchMethodException){
+                throw NoSuchMethodException("")
+            }
         }
 
 

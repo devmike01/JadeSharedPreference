@@ -105,13 +105,6 @@ class ProcessorHelper {
                         val baseSharedPrefA = element.getAnnotation(SharedPref::class.java)
 
 
-                        //Read data from annotations
-                        val readStringAn = element.getAnnotation(ReadString::class.java)
-                        val readStringSetAn = element.getAnnotation(ReadStringSet::class.java)
-                        val readIntAn = element.getAnnotation(ReadInt::class.java)
-                        val readLongAn = element.getAnnotation(ReadLong::class.java)
-                        val readFloatAn = element.getAnnotation(ReadFloat::class.java)
-                        val readAll = element.getAnnotation(ReadAll::class.java)
 
                         if (baseSharedPrefA != null) {
                             //Generate the element that access SharedPreferences
@@ -137,66 +130,19 @@ class ProcessorHelper {
                                 .addStatement("%N()", NameStore.Method.SHARED_PREF_READ_VALUE)
                             // .addComment("Read the saved value from the SharedPreference")
 
-/*
-
-                            if (readFloatAn != null) {
-                                annotationBuilder(
-                                    className,
-                                    element, Float::class.simpleName, readFloatAn.defaultValue,
-                                    readFloatAn.key
-                                )
-                            }
-
-                            if (readStringAn != null) {
-                                annotationBuilder(
-                                    className,
-                                    element,
-                                    String::class.java.simpleName,
-                                    readStringAn.defaultValue,
-                                    readStringAn.key
-                                )
-                            }
-
-                            if (readStringSetAn != null) {
-                                annotationBuilder(
-                                    className, element,
-                                    NameStore.Types.STRINGSET,
-                                    "mutableSetOf(\"\")",
-                                    readStringSetAn.key
-                                )
-
-                            }
-
-                            if (readIntAn != null) {
-                                annotationBuilder(
-                                    className, element, Int::class.simpleName,
-                                    readIntAn.defaultValue,
-                                    readIntAn.key
-                                )
-                            }
-
-                            if (readLongAn != null) {
-
-                                annotationBuilder(
-                                    className, element,
-                                    LONG.simpleName, readLongAn.defaultValue, readLongAn.key
-                                )
-                            }
-
-                            if (readAll != null) {
-                                annotationBuilder(
-                                    className, element,
-                                    MutableMap::class.java.name,
-                                    null,
-                                    NameStore.Variable.READ_ALL
-                                )
-                            }
-
-                            */
 
 
                             for (annotatedMethod in ElementFilter.methodsIn(typeElement.enclosedElements)) {
                                 if (annotatedMethod != null) {
+
+
+                                    //Read data from annotations
+                                    val readStringAn = annotatedMethod.getAnnotation(ReadString::class.java)
+                                    val readStringSetAn = annotatedMethod.getAnnotation(ReadStringSet::class.java)
+                                    val readIntAn = annotatedMethod.getAnnotation(ReadInt::class.java)
+                                    val readLongAn = annotatedMethod.getAnnotation(ReadLong::class.java)
+                                    val readFloatAn = annotatedMethod.getAnnotation(ReadFloat::class.java)
+                                    val readAll = annotatedMethod.getAnnotation(ReadAll::class.java)
 
                                     //Add all the annotation to a set
 

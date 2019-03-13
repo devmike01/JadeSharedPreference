@@ -12,6 +12,10 @@ import javax.lang.model.SourceVersion
 @AutoService(Processor::class)
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @SupportedOptions(NameStore.KAPT_KOTLIN_GENERATED)
+
+/**
+ * Processor to generating Preference code
+ */
 class PreferenceProcessor : AnnotationProcessor() {
     override fun prefName(): String {
         return NameStore.SUFFIX_PREFERENCE_CLASSNAME

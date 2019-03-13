@@ -11,7 +11,7 @@ import org.mockito.Mockito.mock
 import org.robolectric.Robolectric
 
 @RunWith(JUnit4::class)
-class SettingsPreferenceTest {
+class PreferenceTest {
 
 
     lateinit var testClass : TestClass
@@ -23,17 +23,13 @@ class SettingsPreferenceTest {
     @Before
     fun init(){
         context = mock(Context::class.java)
-    }
-
-    @Test
-    fun testWrite(){
-        val testClas = TestClass(context)
-        testClas.init();
-        testClas.writeTest(TEST_STR)
+        val testClass = TestClass(context)
+        testClass.writeTest(TEST_STR)
     }
 
     @Test
     fun readString(){
+        val testClass = TestClass(context)
         assertEquals(testClass.getString(), TEST_STR)
     }
 

@@ -1,9 +1,8 @@
 package devmike.jade.com.compiler.preferences
 
 import com.squareup.kotlinpoet.*
-import devmike.jade.com.annotations.SettingsPreference
+import devmike.jade.com.annotations.Preference
 import devmike.jade.com.annotations.preference.*
-import devmike.jade.com.annotations.sharedpreference.*
 import devmike.jade.com.compiler.FileGenerator
 import devmike.jade.com.compiler.NameStore
 import java.io.File
@@ -11,11 +10,12 @@ import java.lang.NullPointerException
 import javax.annotation.processing.ProcessingEnvironment
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.Element
-import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.TypeElement
 import javax.lang.model.util.ElementFilter
-import kotlin.reflect.KClass
 
+/**
+ * Processor helper
+ */
 class PreferenceProcessorHelper {
 
     open class Builder {
@@ -110,16 +110,8 @@ class PreferenceProcessorHelper {
                 for (element in ElementFilter.constructorsIn(typeElement.enclosedElements)) {
                     if (element != null) {
                         //Create the element where we initialize the SharedPrefence
-                        val settingsPref = element.getAnnotation(SettingsPreference::class.java)
+                        val settingsPref = element.getAnnotation(Preference::class.java)
 
-
-                        //Read data from annotations
-                        val readStringAn = element.getAnnotation(ReadPrefString::class.java)
-                        val readStringSetAn = element.getAnnotation(ReadPrefStringSet::class.java)
-                        val readIntAn = element.getAnnotation(ReadPrefInt::class.java)
-                        val readLongAn = element.getAnnotation(ReadPrefLong::class.java)
-                        val readFloatAn = element.getAnnotation(ReadPrefFloat::class.java)
-                        val readAll = element.getAnnotation(ReadAllPref::class.java)
 
                         if (settingsPref != null) {
 
@@ -143,61 +135,74 @@ class PreferenceProcessorHelper {
                                 .addStatement("%N()", NameStore.Method.SHARED_PREF_READ_VALUE)
 
 
-                            //Read Preference file if a variable is annotated
-                            if (readFloatAn != null) {
-                                annotationBuilder(
-                                    className,
-                                    element, Float::class.simpleName, readFloatAn.defaultValue,
-                                    readFloatAn.key
-                                )
+                            /**
+                             * Construct preference listener and generates its codes
+                             */
+                            for (annotatedMethod in ElementFilter.methodsIn(typeElement.enclosedElements)) {
+                                if (annotatedMethod != null) {
+
+                                    val readStringAn = annotatedMethod.getAnnotation(ReadPrefString::class.java)
+                                    val readStringSetAn = annotatedMethod.getAnnotation(ReadPrefStringSet::class.java)
+                                    val readIntAn = annotatedMethod.getAnnotation(ReadPrefInt::class.java)
+                                    val readLongAn = annotatedMethod.getAnnotation(ReadPrefLong::class.java)
+                                    val readFloatAn = annotatedMethod.getAnnotation(ReadPrefFloat::class.java)
+                                    val readAll = annotatedMethod.getAnnotation(ReadAllPref::class.java)
+
+
+                                    if (readFloatAn != null) {
+                                        annotationBuilder(
+                                            className,
+                                            annotatedMethod, Float::class.simpleName, readFloatAn.defaultValue,
+                                            readFloatAn.key
+                                        )
+                                    }
+
+                                    if (readStringAn != null) {
+                                        annotationBuilder(
+                                            className,
+                                            annotatedMethod,
+                                            String::class.java.simpleName,
+                                            readStringAn.defaultValue,
+                                            readStringAn.key
+                                        )
+                                    }
+
+                                    if (readStringSetAn != null) {
+                                        annotationBuilder(
+                                            className, annotatedMethod,
+                                            NameStore.Types.STRINGSET,
+                                            "mutableSetOf(\"\")",
+                                            readStringSetAn.key
+                                        )
+
+                                    }
+
+                                    if (readIntAn != null) {
+                                        annotationBuilder(
+                                            className, annotatedMethod, Int::class.simpleName,
+                                            readIntAn.defaultValue,
+                                            readIntAn.key
+                                        )
+                                    }
+
+                                    if (readLongAn != null) {
+
+                                        annotationBuilder(
+                                            className, annotatedMethod,
+                                            LONG.simpleName, readLongAn.defaultValue, readLongAn.key
+                                        )
+                                    }
+
+                                    if (readAll != null) {
+                                        annotationBuilder(
+                                            className, annotatedMethod,
+                                            MutableMap::class.java.name,
+                                            null,
+                                            NameStore.Variable.READ_ALL
+                                        )
+                                    }
+                                }
                             }
-
-                            if (readStringAn != null) {
-                                annotationBuilder(
-                                    className,
-                                    element,
-                                    String::class.java.simpleName,
-                                    readStringAn.defaultValue,
-                                    readStringAn.key
-                                )
-                            }
-
-                            if (readStringSetAn != null) {
-                                annotationBuilder(
-                                    className, element,
-                                    NameStore.Types.STRINGSET,
-                                    "mutableSetOf(\"\")",
-                                    readStringSetAn.key
-                                )
-
-                            }
-
-                            if (readIntAn != null) {
-                                annotationBuilder(
-                                    className, element, Int::class.simpleName,
-                                    readIntAn.defaultValue,
-                                    readIntAn.key
-                                )
-                            }
-
-                            if (readLongAn != null) {
-
-                                annotationBuilder(
-                                    className, element,
-                                    LONG.simpleName, readLongAn.defaultValue, readLongAn.key
-                                )
-                            }
-
-                            if (readAll != null) {
-                                annotationBuilder(
-                                    className, element,
-                                    MutableMap::class.java.name,
-                                    null,
-                                    NameStore.Variable.READ_ALL
-                                )
-                            }
-
-
 
                             val buildReadSharedPrefValueBuilder = FunSpec.builder(NameStore.Method.SHARED_PREF_READ_VALUE)
                                 .addModifiers(KModifier.PRIVATE)

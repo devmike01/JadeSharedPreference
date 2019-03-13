@@ -2,11 +2,9 @@ package devmike.jade.com.jadesharedpreference
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.support.annotation.VisibleForTesting
 import android.util.Log
 import android.view.View
-import devmike.jade.com.annotations.SettingsPreference
 import devmike.jade.com.annotations.SharedPref
 import devmike.jade.com.annotations.sharedpreference.*
 import devmike.jade.com.binder.JadeSharedPreference
@@ -19,7 +17,7 @@ class MainActivity @SharedPref("setting") constructor(): AppCompatActivity() {
 
     //Read string from JadeSharedPreference
     @ReadString("string")
-    lateinit var mString: String
+    var mString: String? =""
 
     //Read Integer from JadeSharedPreference
     @ReadInt("integer_anything")

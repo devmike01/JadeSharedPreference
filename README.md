@@ -2,7 +2,7 @@
 
 [![Android Arsenal]( https://img.shields.io/badge/Android%20Arsenal-JadeSharedPreference-green.svg?style=flat )]( https://android-arsenal.com/details/1/7504 )  [![CircleCI](https://circleci.com/gh/devmike01/JadeSharedPreference/tree/master.svg?style=svg)](https://circleci.com/gh/devmike01/JadeSharedPreference/tree/master)
 
-A lite weight SharedPreference library which uses annotation processing to generate boilerplate code for you.
+A lite weight SharedPreference library which uses annotation processing to generate codes that let.
 
 * Eliminate the whole `SharedPreference` code
 * Write less code to configure JadeSharedPreference
@@ -10,18 +10,31 @@ A lite weight SharedPreference library which uses annotation processing to gener
 * Read from JadeSharedPreference using just annotations `@Read...`)
 * Listen to value changes in real-time
 
+### What's new in version `1.3.0`
+
+* Bug fixes
+* Support for `Preference` file
+
+The preference
+
+### Usage
 
 ```kotlin
-class InecBox @SharedPref("key") constructor(context: Context) {
+class InecBox @SharedPref("key") @Preference constructor(context: Context) {
 
     val TAG: String = "InecBox"
 	
     //Read item from JadeSharedPreference	
     @ReadString("ballot")
     var ballotPaper: String? = null
+    
+    
+    @ReadPrefString("pref_ballot")
+    var fakeBallot: String? = null
 
     private var jsp :JadeSharedPreference =JadeSharedPreference.plug(this, context)
 
+    //Read and write to JadeSharedPreference
     fun inecBox() {
     	//Insert item to JadeSharedPreference
         jsp.insert("ballot", "Ballot Paper")
@@ -30,11 +43,28 @@ class InecBox @SharedPref("key") constructor(context: Context) {
     fun readBallot(){
     	Log.d(TAG, ballotPaper)
     }
+    
+    //Read and write to Preference
+    fun fakeInecBox() {
+    	//Insert item to JadeSharedPreference
+        jsp.insert("pref_ballot", "Fake Ballot Paper")
+    }
+    
+    fun readFakeBallot(){
+    	Log.d(TAG, fakeBallot)
+    }
 
-    //Listen to String changes in realtime
+    //Listen to changes in SharedPreference
     @ReadString("ballot")
     fun readStringChanges(s: String){
     	Log.d(TAG, s)
+    }
+    
+    
+    //Listen to changes in SharedPreference
+    @ReadString("fake_ballot")
+    fun readFakeBallotChanges(fake: String){
+    	Log.d(TAG, fake)
     }
     
 }

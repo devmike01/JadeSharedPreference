@@ -1,6 +1,6 @@
 package devmike.jade.com.compiler
 
-import devmike.jade.com.annotations.SettingsPreference
+import devmike.jade.com.annotations.Preference
 import devmike.jade.com.compiler.sharedpreference.ProcessorHelper
 import devmike.jade.com.annotations.SharedPref
 import devmike.jade.com.annotations.preference.*
@@ -36,7 +36,7 @@ abstract class AnnotationProcessor : AbstractProcessor() {
         if (prefName() == NameStore.SUFFIX_PREFERENCE_CLASSNAME){
             //Generates codes for Preference
             return mutableSetOf(
-                SettingsPreference::class.java.name,
+                Preference::class.java.name,
                 ReadPrefFloat::class.java.name, ReadInt::class.java.name,
                 ReadPrefString::class.java.name,
                 ReadPrefLong::class.java.name,
