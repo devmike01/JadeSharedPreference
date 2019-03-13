@@ -15,7 +15,6 @@ A lite weight SharedPreference library which uses annotation processing to gener
 * Bug fixes
 * Support for `Preference` file
 
-The preference
 
 ### Usage
 
@@ -32,7 +31,11 @@ class InecBox @SharedPref("key") @Preference constructor(context: Context) {
     @ReadPrefString("pref_ballot")
     var fakeBallot: String? = null
 
-    private var jsp :JadeSharedPreference =JadeSharedPreference.plug(this, context)
+    //Setup for SharedPreference file
+    private var jsp :JadeSharedPreference =JadeSharedPreference.apply(this, context)
+    
+    //Setup for Preference file
+    private var jp :JadeSharedPreference =JadeSharedPreference.preference(this, context)
 
     //Read and write to JadeSharedPreference
     fun inecBox() {
@@ -47,29 +50,17 @@ class InecBox @SharedPref("key") @Preference constructor(context: Context) {
     //Read and write to Preference
     fun fakeInecBox() {
     	//Insert item to JadeSharedPreference
-        jsp.insert("pref_ballot", "Fake Ballot Paper")
+        jp.insert("pref_ballot", "Fake Ballot Paper")
     }
     
     fun readFakeBallot(){
     	Log.d(TAG, fakeBallot)
     }
-
-    //Listen to changes in SharedPreference
-    @ReadString("ballot")
-    fun readStringChanges(s: String){
-    	Log.d(TAG, s)
-    }
-    
-    
-    //Listen to changes in SharedPreference
-    @ReadString("fake_ballot")
-    fun readFakeBallotChanges(fake: String){
-    	Log.d(TAG, fake)
-    }
     
 }
 
 ```
+Check the sample project to see more sample usages.
 
 ### Configuration
 ##### Step 1: Add it in your root build.gradle at the end of repositories:
