@@ -84,8 +84,8 @@ allprojects {
 ##### Step 2: Add the dependency
 ```groovy
 	dependencies {
-		implementation 'com.github.devmike01.JadeSharedPreference:binder:1.2.16'
-		kapt 'com.github.devmike01.JadeSharedPreference:compiler:1.2.16'
+		implementation 'com.github.devmike01.JadeSharedPreference:binder:1.3.0'
+		kapt 'com.github.devmike01.JadeSharedPreference:compiler:1.3.0'
 	}	
 ```
 > Note: Add `apply plugin: 'kotlin-kapt'` - if you don't already have it, to your app `build.gradle` to allow the the processor generates the necessary codes.
