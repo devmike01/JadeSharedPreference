@@ -2,7 +2,7 @@
 
 [![Android Arsenal]( https://img.shields.io/badge/Android%20Arsenal-JadeSharedPreference-green.svg?style=flat )]( https://android-arsenal.com/details/1/7504 )  [![CircleCI](https://circleci.com/gh/devmike01/JadeSharedPreference/tree/master.svg?style=svg)](https://circleci.com/gh/devmike01/JadeSharedPreference/tree/master)
 
-A light weight library which uses annotation processing to generate codes that let you read and write to both `SharedPreferences` and `Preference` files.
+A light weight library which uses annotation processing to generate codes that let you read and write to `SharedPreferences` file.
 
 * Eliminate the whole `SharedPreference` boilerplace codes
 * Write less code to configure JadeSharedPreference
